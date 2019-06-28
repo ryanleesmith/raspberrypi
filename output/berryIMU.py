@@ -296,7 +296,7 @@ while True:
         print ("\n# HEADING %5.2f  tiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)),
         
     if 1:			#Change to '0' to stop  showing the angles from the Kalman filter
-        print ("# kalmanX %5.2f   kalmanY %5.2f #" % (kalmanX,kalmanY)),
+        print ("\n# kalmanX %5.2f   kalmanY %5.2f #" % (kalmanX,kalmanY)),
 
     #print a new line
     print ""  
