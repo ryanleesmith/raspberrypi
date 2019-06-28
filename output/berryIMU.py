@@ -284,19 +284,19 @@ while True:
 
 
     if 1:			#Change to '0' to stop showing the angles from the accelerometer
-        print ("# ACCX Angle %5.2f ACCY Angle %5.2f #  " % (AccXangle, AccYangle)),
+        print ("\n# ACCX Angle %5.2f \tACCY Angle %5.2f #  " % (AccXangle, AccYangle)),
 
     if 1:			#Change to '0' to stop  showing the angles from the gyro
-        print ("\n# GRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)),
+        print ("\n# GRYX Angle %5.2f \tGYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)),
 
     if 1:			#Change to '0' to stop  showing the angles from the complementary filter
-        print ("\n# CFangleX Angle %5.2f   CFangleY Angle %5.2f #" % (CFangleX,CFangleY)),
+        print ("\n# CFangleX Angle %5.2f \tCFangleY Angle %5.2f #" % (CFangleX,CFangleY)),
         
     if 1:			#Change to '0' to stop  showing the heading
-        print ("\n# HEADING %5.2f  tiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)),
+        print ("\n# HEADING %5.2f \ttiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)),
         
     if 1:			#Change to '0' to stop  showing the angles from the Kalman filter
-        print ("\n# kalmanX %5.2f   kalmanY %5.2f #" % (kalmanX,kalmanY)),
+        print ("\n# kalmanX %5.2f \tkalmanY %5.2f #" % (kalmanX,kalmanY)),
 
     #print a new line
     print ""  
