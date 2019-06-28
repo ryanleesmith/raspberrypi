@@ -37,11 +37,11 @@ AA =  0.40      # Complementary filter constant
 # compass will result in a more accurate heading value.
 
 magXmin =  0
-magYmin =  0
-magZmin =  0
-magXmax =  0
-magYmax =  0
-magZmax =  0
+magYmin =  649
+magZmin =  -763
+magXmax =  510
+magYmax =  774
+magZmax =  -648
 
 
 '''
@@ -197,9 +197,9 @@ while True:
 
 
     #Calculate the angles from the gyro. 
-    gyroXangle+=rate_gyr_x*LP
-    gyroYangle+=rate_gyr_y*LP
-    gyroZangle+=rate_gyr_z*LP
+    gyroXangle=rate_gyr_x*LP
+    gyroYangle=rate_gyr_y*LP
+    gyroZangle=rate_gyr_z*LP
 
     #Convert Accelerometer values to degrees
 
@@ -287,7 +287,7 @@ while True:
         print ("\n# ACCX Angle %5.2f \tACCY Angle %5.2f #  " % (AccXangle, AccYangle)),
 
     if 1:			#Change to '0' to stop  showing the angles from the gyro
-        print ("\n# GRYX Angle %5.2f \tGYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)),
+        print ("\n# GRYX Angle %5.2f \tGYRY Angle %5.2f \tGYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)),
 
     if 1:			#Change to '0' to stop  showing the angles from the complementary filter
         print ("\n# CFangleX Angle %5.2f \tCFangleY Angle %5.2f #" % (CFangleX,CFangleY)),
