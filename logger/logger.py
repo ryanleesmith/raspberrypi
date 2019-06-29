@@ -21,7 +21,7 @@ def loop():
     print ("\nGYRx %5.2f\tGYRy %5.2f\tGYRz %5.2f" % (GYRx, GYRy, GYRz))
     print ("\nMAGx %5.2f\tMAGy %5.2f\tMAGz %5.2f" % (MAGx, MAGy, MAGz))
 
-IMU.detect()
+IMU.detectImu()
 IMU.init()
 
 while True:
