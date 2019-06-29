@@ -1,6 +1,8 @@
 from IMU_REGISTERS import *
 from sensors import *
 
+acc = Accelerometer()
+
 import time
 import smbus
 bus = smbus.SMBus(1)
@@ -113,7 +115,6 @@ def detect(address, expectedResp):
             raise IMUError(address)
 
 def detectImu():
-    acc = Accelerometer()
     acc.detect()
 
     return
