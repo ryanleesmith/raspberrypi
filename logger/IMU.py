@@ -105,8 +105,9 @@ def detect(address, expectedResp):
     except IOError as ioe:
         raise IMUError(address)
     else:
+        print("\nGot: %s" % (resp))
         if (resp != expectedResp):
-            print("\nUnexpected: %s" % (resp))
+            print("\nUnexpected: %s" % (expectedResp))
             raise IMUError(address)
 
 def detectImu():
