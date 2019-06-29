@@ -1,6 +1,14 @@
-MAG_ADDRESS	= 0x1C  # Would be 0x1E if SDO_M is HIGH		
-ACC_ADDRESS	= 0x6A  
+ACC_ADDRESS	= 0x6A
 GYR_ADDRESS = 0x6A  # Would be 0x6B if SDO_AG is HIGH
+MAG_ADDRESS	= 0x1C  # Would be 0x1E if SDO_M is HIGH
+
+#///////////////////////////
+#// Detect Accel/Gyro/Mag //
+#///////////////////////////
+WHO_AM_I_REG        = 0x0F
+WHO_AM_I_A_RESP     = 0x68
+WHO_AM_I_G_RESP     = 0x68
+WHO_AM_I_M_RESP     = 0x3D
 
 #/////////////////////////////////
 #// Accel/Gyro (XL/G) Registers //
@@ -15,7 +23,6 @@ INT_GEN_DUR_XL      = 0x0A
 REFERENCE_G         = 0x0B
 INT1_CTRL           = 0x0C
 INT2_CTRL           = 0x0D
-WHO_AM_I_AG         = 0x0F
 CTRL_REG1_G         = 0x10
 CTRL_REG2_G         = 0x11
 CTRL_REG3_G         = 0x12
@@ -65,7 +72,6 @@ OFFSET_Y_REG_L_M    = 0x07
 OFFSET_Y_REG_H_M    = 0x08
 OFFSET_Z_REG_L_M    = 0x09
 OFFSET_Z_REG_H_M    = 0x0A
-WHO_AM_I_M          = 0x0F
 CTRL_REG1_M         = 0x20
 CTRL_REG2_M         = 0x21
 CTRL_REG3_M         = 0x22
@@ -82,9 +88,3 @@ INT_CFG_M           = 0x30
 INT_SRC_M           = 0x30
 INT_THS_L_M         = 0x32
 INT_THS_H_M         = 0x33
-
-#////////////////////////
-#// WHO_AM_I Responses //
-#////////////////////////
-WHO_AM_I_AG_RSP     = 0x68
-WHO_AM_I_M_RSP      = 0x3D

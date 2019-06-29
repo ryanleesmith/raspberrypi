@@ -94,12 +94,13 @@ def readGYRz():
 def detect():
     try:
         # Check for IMU
-        WHO_AG_response = (read(GYR_ADDRESS, WHO_AM_I_AG))
-        WHO_M_response = (read(MAG_ADDRESS, WHO_AM_I_M))
+        detectAccResp = (read(ACC_ADDRESS, WHO_AM_I_REG))
+        detectGyrResp = (read(GYR_ADDRESS, WHO_AM_I_REG))
+        detectMagResp = (read(MAG_ADDRESS, WHO_AM_I_REG))
     except IOError as f:
         print "Could not detect IMU"
     else:
-        if (WHO_AG_response == WHO_AM_I_AG_RSP) and (WHO_M_response == WHO_AM_I_M_RSP):
+        if (detectAccResp == WHO_AM_I_A_RESP) and (detectGyrResp == WHO_AM_I_G_RESP) and (detectMagResp == WHO_AM_I_M_RESP):
             print "Detected IMU"
 
     time.sleep(1)
