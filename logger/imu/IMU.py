@@ -1,7 +1,9 @@
+from IMU_REGISTERS import *
+from sensors import *
+
+import time
 import smbus
 bus = smbus.SMBus(1)
-from IMU_REGISTERS import *
-import time
 
 #///////////
 #// Write //
@@ -111,6 +113,14 @@ def detect(address, expectedResp):
             raise IMUError(address)
 
 def detectImu():
+    acc = Accelerometer()
+    acc.detect()
+
+    return
+
+    gyr = Gyroscope()
+    mag = Magnetometer()
+
     try:
         detect(ACC_ADDRESS, WHO_AM_I_A_RESP)
         detect(GYR_ADDRESS, WHO_AM_I_G_RESP)
