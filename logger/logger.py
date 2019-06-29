@@ -6,8 +6,8 @@ import IMU
 import datetime
 import os
 
-IMU.detectIMU()
-IMU.initIMU()
+IMU.detect()
+IMU.init()
 
 ACCx = IMU.readACCx()
 ACCy = IMU.readACCy()
