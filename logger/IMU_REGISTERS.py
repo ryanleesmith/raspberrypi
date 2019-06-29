@@ -1,6 +1,14 @@
 ACC_ADDRESS	= 0x6A
-GYR_ADDRESS = 0x6A  # Would be 0x6B if SDO_AG is HIGH
-MAG_ADDRESS	= 0x1C  # Would be 0x1E if SDO_M is HIGH
+GYR_ADDRESS = 0x6A
+MAG_ADDRESS	= 0x1C
+PRS_ADDRESS = 0x77
+
+NAMES = {
+    ACC_ADDRESS: "accelerometer",
+    GYR_ADDRESS: "gyroscope",
+    MAG_ADDRESS: "magnetometer",
+    PRS_ADDRESS: "barometer"
+}
 
 #///////////////////////////
 #// Detect Accel/Gyro/Mag //

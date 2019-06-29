@@ -91,17 +91,30 @@ def readGYRz():
 #//////////
 #// Init //
 #//////////
-def detect():
+class IMUError(Error):
+    def __init__(self, address):
+        self.address = address
+
+def detect(address, expectedResp):
     try:
-        # Check for IMU
-        detectAccResp = (read(ACC_ADDRESS, WHO_AM_I_REG))
-        detectGyrResp = (read(GYR_ADDRESS, WHO_AM_I_REG))
-        detectMagResp = (read(MAG_ADDRESS, WHO_AM_I_REG))
-    except IOError as f:
-        print "Could not detect IMU"
+        resp = read(address, WHO_AM_I_REG)
+    except IOError as ioe:
+        raise IMUError(address)
     else:
-        if (detectAccResp == WHO_AM_I_A_RESP) and (detectGyrResp == WHO_AM_I_G_RESP) and (detectMagResp == WHO_AM_I_M_RESP):
-            print "Detected IMU"
+        if (resp != expectedResp):
+            print resp
+            raise IMUError(address)
+
+def detectImu():
+    try:
+        detect(ACC_ADDRESS, WHO_AM_I_A_RESP)
+        detect(GYR_ADDRESS, WHO_AM_I_G_RESP)
+        detect(MAG_ADDRESS, WHO_AM_I_M_RESP)
+        detect(PRS_ADDRESS, 0)
+    except IMUError as imue:
+        print("Could not detect %s", NAMES[imue.address])
+    else:
+        print "Detected IMU"
 
     time.sleep(1)
 
