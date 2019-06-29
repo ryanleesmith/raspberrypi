@@ -7,3 +7,14 @@ import datetime
 import os
 
 IMU.detectIMU()
+IMU.initIMU()
+
+ACCx = IMU.readACCx()
+ACCy = IMU.readACCy()
+ACCz = IMU.readACCz()
+GYRx = IMU.readGYRx()
+GYRy = IMU.readGYRy()
+GYRz = IMU.readGYRz()
+MAGx = IMU.readMAGx()
+MAGy = IMU.readMAGy()
+MAGz = IMU.readMAGz()
