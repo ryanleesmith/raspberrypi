@@ -91,6 +91,9 @@ def readGYRz():
 #//////////
 #// Init //
 #//////////
+class Error(Exception):
+    pass
+
 class IMUError(Error):
     def __init__(self, address):
         self.address = address
