@@ -100,6 +100,7 @@ class IMUError(Error):
 
 def detect(address, expectedResp):
     try:
+        print("\nDetecting %s...", NAMES[address])
         resp = read(address, WHO_AM_I_REG)
     except IOError as ioe:
         raise IMUError(address)
@@ -115,9 +116,9 @@ def detectImu():
         detect(MAG_ADDRESS, WHO_AM_I_M_RESP)
         detect(PRS_ADDRESS, 0)
     except IMUError as imue:
-        print("Could not detect %s", NAMES[imue.address])
+        print("\nCould not detect %s", NAMES[imue.address])
     else:
-        print "Detected IMU"
+        print "\nDetected IMU"
 
     time.sleep(1)
 
