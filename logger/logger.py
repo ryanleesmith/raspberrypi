@@ -6,7 +6,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import time
 import math
-import IMU
+from imu import IMU
 import datetime
 import os
 
