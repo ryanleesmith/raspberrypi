@@ -99,7 +99,7 @@ def detect():
     except IOError as f:
         print "Could not detect IMU"
     else:
-        if (WHO_AG_response == 0x68) and (WHO_M_response == 0x3d):
+        if (WHO_AG_response == WHO_AM_I_AG_RSP) and (WHO_M_response == WHO_AM_I_M_RSP):
             print "Detected IMU"
 
     time.sleep(1)
