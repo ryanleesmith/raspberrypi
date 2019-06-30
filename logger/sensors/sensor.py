@@ -76,5 +76,4 @@ class Pressure(Sensor):
         cTemp = (var1 + var2) / 5120.0
         fTemp = cTemp * 1.8 + 32
 
-        print cTemp
-        print fTemp
+        print "Temperature: %.2f F\n" % fTemp
