@@ -71,7 +71,7 @@ class Thermostat(Pressure):
     def __init__(self, bus):
         Pressure.__init__(self, bus, "Thermostat")
 
-    def read(self):
+    def readTemp(self):
         data = self.readBlock(0xF7, 8)
 
         adc_t = ((data[3] * 65536) + (data[4] * 256) + (data[5] & 0xF0)) / 16
