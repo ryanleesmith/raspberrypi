@@ -49,7 +49,22 @@ class Pressure(Sensor):
     def __init__(self, bus):
         self.WHO_AM_I = 0
         Sensor.__init__(self, bus, 0x77, "Pressure")
+        self.readTrimmings()
+        self.write(0xF4, 0x27)
+        self.write(0xF5, 0xA0)
+
+    def readTrimmings(self):
+        self.trimmings = {}
+        block = self.readBlock(0x88, 24)
+
+        self.trimmings["T1"] = block[1] * 256 + block[0]
+        self.trimmings["T2"] = block[3] * 256 + block[2]
+        if self.trimmings["T2"] > 32767:
+            self.trimmings["T2"] -= 65536
+        self.trimmings["T3"] = block[5] * 256 + block[4]
+        if self.trimmings["T3"] > 32767:
+            self.trimmings["T3"] -= 65536
 
     def readTemp(self):
-        block = self.readBlock(0x88, 24)
-        print block
+        data = self.readBlock(0xF7, 8)
+        print data
