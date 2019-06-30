@@ -1,11 +1,11 @@
-from IMU_REGISTERS import *
-from sensors import Accelerometer
-
-acc = Accelerometer()
-
 import time
 import smbus
 bus = smbus.SMBus(1)
+
+from IMU_REGISTERS import *
+from sensors import Accelerometer
+
+acc = Accelerometer(bus)
 
 #///////////
 #// Write //
