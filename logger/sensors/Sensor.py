@@ -6,10 +6,10 @@ class Sensor():
         self.address = address
         self.name = name
 
-    def detect():
+    def detect(self):
         try:
             print("\nDetecting %s..." % (self.name))
-            resp = self.read(WHO_AM_I_REG)
+            resp = self.read(Sensor.WHO_AM_I_REG)
         except IOError as ioe:
             #raise IMUError(address)
             print("\nError")
@@ -19,9 +19,13 @@ class Sensor():
                 print("\nUnexpected: %s" % (expectedResp))
                 #raise IMUError(address)
 
-    def read(register):
+    def read(self, register):
         return self.bus.read_byte_data(self.address, register)
 
-    def write(register, value):
+    def write(self, register, value):
         self.bus.write_byte_data(self.address, register, value)
         return -1
+
+class Accelerometer(Sensor):
+    def __init__(self, bus):
+        Sensor.__init__(self, bus, 0x6A, "Accelerometer")

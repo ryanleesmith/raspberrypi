@@ -1,11 +1,12 @@
 import time
+bus = "fake"
 import smbus
 bus = smbus.SMBus(1)
 
 from IMU_REGISTERS import *
-from sensors import Accelerometer.Accelerometer
+from sensors import sensor
 
-acc = Accelerometer(bus)
+acc = sensor.Accelerometer(bus)
 
 #///////////
 #// Write //
