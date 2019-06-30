@@ -3,7 +3,7 @@ import smbus
 bus = smbus.SMBus(1)
 
 from IMU_REGISTERS import *
-from sensors import Accelerometer
+from sensors import Accelerometer.Accelerometer
 
 acc = Accelerometer(bus)
 
