@@ -28,8 +28,6 @@ def initialize():
     gyr.initialize()
     mag.initialize()
     tmp.initialize()
-
-    print "\n"
     return
 
 def printData():
