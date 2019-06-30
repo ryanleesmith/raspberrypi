@@ -4,6 +4,7 @@ import sys
 from os import path, system
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
+import time
 from imu import IMU
 
 def loop():
