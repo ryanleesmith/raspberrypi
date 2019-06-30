@@ -9,7 +9,7 @@ from sensors import sensor
 acc = sensor.Accelerometer(bus)
 gyr = sensor.Gyroscope(bus)
 mag = sensor.Magnetometer(bus)
-bar = sensor.Barometer(bus)
+prs = sensor.Pressure(bus)
 
 #///////////
 #// Write //
@@ -119,11 +119,12 @@ def detect(address, expectedResp):
             raise IMUError(address)
 
 def detectImu():
-    global acc, gyr, mag, bar
+    global acc, gyr, mag, prs
     acc.detect()
     gyr.detect()
     mag.detect()
-    bar.detect()
+    prs.detect()
+    prs.readTemp()
 
     return
 

@@ -23,6 +23,9 @@ class Sensor():
     def read(self, register):
         return self.bus.read_byte_data(self.address, register)
 
+    def readBlock(self, register, size):
+        return self.bus.read_i2c_block_data(self.address, register, size)
+
     def write(self, register, value):
         self.bus.write_byte_data(self.address, register, value)
         return -1
@@ -42,12 +45,11 @@ class Magnetometer(Sensor):
         self.WHO_AM_I = 0x3D
         Sensor.__init__(self, bus, 0x1C, "Magnetometer")
 
-class Thermostat(Sensor):
+class Pressure(Sensor):
     def __init__(self, bus):
         self.WHO_AM_I = 0
-        Sensor.__init__(self, bus, 0x77, "Thermostat")
+        Sensor.__init__(self, bus, 0x77, "Pressure")
 
-class Barometer(Sensor):
-    def __init__(self, bus):
-        self.WHO_AM_I = 0
-        Sensor.__init__(self, bus, 0x77, "Barometer")
+    def readTemp(self):
+        block = self.readBlock(0x88, 24)
+        print block
