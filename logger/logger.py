@@ -27,7 +27,7 @@ def loop():
     #print ("\nMAGx %5.2f\tMAGy %5.2f\tMAGz %5.2f" % (MAGx, MAGy, MAGz))
 
 if IMU.detect():
-    IMU.init()
+    IMU.initialize()
 
     while True:
         loop()

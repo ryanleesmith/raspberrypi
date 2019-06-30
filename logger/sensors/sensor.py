@@ -14,10 +14,13 @@ class Sensor():
             raise SensorError(self.name)
         else:
             if (id != self.id):
-                #print("Unexpected: %s\n" % (id))
                 raise SensorError(self.name)
             else:
                 print("Found!\n")
+
+    def initialize(self):
+        print("Initialized %s" % (self.name))
+        return
 
     def read(self, register):
         return self.bus.read_byte_data(self.address, register)
@@ -35,7 +38,7 @@ class Accelerometer(Sensor):
 
 class Gyroscope(Sensor):
     def __init__(self, bus):
-        Sensor.__init__(self, bus, 0x6A, 0x67, "Gyroscope")
+        Sensor.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
 
 class Magnetometer(Sensor):
     def __init__(self, bus):
@@ -45,9 +48,12 @@ class Pressure(Sensor):
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x77, 0x58, "Pressure")
         self.idRegister = 0xD0
+
+    def initialize(self):
         self.readTrim()
         self.write(0xF4, 0x27)
         self.write(0xF5, 0xA0)
+        Sensor.initialize(self)
 
     def readTrim(self):
         self.trim = {}

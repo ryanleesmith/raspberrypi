@@ -144,7 +144,14 @@ def detect():
 
     time.sleep(1)
 
-def init():
+def initialize():
+    global acc, gyr, mag, prs
+    acc.initialize()
+    gyr.initialize()
+    mag.initialize()
+    prs.initialize()
+
+    print "\n"
     return
 
     # Init accelerometer
