@@ -49,22 +49,32 @@ class Pressure(Sensor):
     def __init__(self, bus):
         self.WHO_AM_I = 0
         Sensor.__init__(self, bus, 0x77, "Pressure")
-        self.readTrimmings()
+        self.readTrim()
         self.write(0xF4, 0x27)
         self.write(0xF5, 0xA0)
 
-    def readTrimmings(self):
-        self.trimmings = {}
+    def readTrim(self):
+        self.trim = {}
         block = self.readBlock(0x88, 24)
 
-        self.trimmings["T1"] = block[1] * 256 + block[0]
-        self.trimmings["T2"] = block[3] * 256 + block[2]
-        if self.trimmings["T2"] > 32767:
-            self.trimmings["T2"] -= 65536
-        self.trimmings["T3"] = block[5] * 256 + block[4]
-        if self.trimmings["T3"] > 32767:
-            self.trimmings["T3"] -= 65536
+        self.trim["T1"] = block[1] * 256 + block[0]
+        self.trim["T2"] = block[3] * 256 + block[2]
+        if self.trim["T2"] > 32767:
+            self.trim["T2"] -= 65536
+        self.trim["T3"] = block[5] * 256 + block[4]
+        if self.trim["T3"] > 32767:
+            self.trim["T3"] -= 65536
 
     def readTemp(self):
         data = self.readBlock(0xF7, 8)
-        print data
+
+        adc_t = ((data[3] * 65536) + (data[4] * 256) + (data[5] & 0xF0)) / 16
+
+        var1 = ((adc_t) / 16384.0 - (self.trim["T1"]) / 1024.0) * (self.trim["T2"])
+        var2 = (((adc_t) / 131072.0 - (self.trim["T1"]) / 8192.0) * ((adc_t)/131072.0 - (self.trim["T1"])/8192.0)) * (self.trim["T3"])
+        #t_fine = (var1 + var2)
+        cTemp = (var1 + var2) / 5120.0
+        fTemp = cTemp * 1.8 + 32
+
+        print cTemp
+        print fTemp
