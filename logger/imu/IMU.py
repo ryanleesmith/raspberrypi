@@ -1,7 +1,7 @@
 import time
 bus = "fake"
-#import smbus
-#bus = smbus.SMBus(1)
+import smbus
+bus = smbus.SMBus(1)
 
 from IMU_REGISTERS import *
 from sensors import sensor
