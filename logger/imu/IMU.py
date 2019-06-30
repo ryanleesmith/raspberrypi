@@ -1,5 +1,5 @@
 import time
-bus = "fake"
+#bus = "fake"
 import smbus
 bus = smbus.SMBus(1)
 
@@ -106,7 +106,7 @@ class IMUError(Error):
     def __init__(self, address):
         self.address = address
 
-def detect(address, expectedResp):
+def detect_old(address, expectedResp):
     try:
         print("\nDetecting %s..." % (NAMES[address]))
         resp = read(address, WHO_AM_I_REG)
@@ -118,18 +118,19 @@ def detect(address, expectedResp):
             print("\nUnexpected: %s" % (expectedResp))
             raise IMUError(address)
 
-def detectImu():
+def detect():
     global acc, gyr, mag, prs
-    acc.detect()
-    gyr.detect()
-    mag.detect()
-    prs.detect()
-    prs.readTemp()
-
-    return
-
-    gyr = Gyroscope()
-    mag = Magnetometer()
+    try:
+        acc.detect()
+        gyr.detect()
+        mag.detect()
+        prs.detect()
+    except sensor.SensorError as e:
+        print "Could not detect %s\n" % e.name
+        return False
+    else:
+        #prs.readTemp()
+        return True
 
     try:
         detect(ACC_ADDRESS, WHO_AM_I_A_RESP)

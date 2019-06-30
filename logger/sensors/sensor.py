@@ -11,12 +11,11 @@ class Sensor():
             print("Detecting %s..." % (self.name))
             id = self.read(self.idRegister)
         except IOError as ioe:
-            #raise IMUError(address)
-            print("\nError")
+            raise SensorError(self.name)
         else:
             if (id != self.id):
-                print("Unexpected: %s\n" % (id))
-                #raise IMUError(address)
+                #print("Unexpected: %s\n" % (id))
+                raise SensorError(self.name)
             else:
                 print("Found!\n")
 
@@ -74,3 +73,7 @@ class Pressure(Sensor):
         fTemp = cTemp * 1.8 + 32
 
         print "Temperature: %.2f F\n" % fTemp
+
+class SensorError(Exception):
+    def __init__(self, name):
+        self.name = name
