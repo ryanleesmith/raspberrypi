@@ -7,6 +7,7 @@ class Sensor():
         self.name = name
 
     def detect(self):
+        return
         try:
             print("\nDetecting %s..." % (self.name))
             resp = self.read(Sensor.WHO_AM_I_REG)

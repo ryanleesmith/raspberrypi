@@ -1,7 +1,7 @@
 import time
 bus = "fake"
-import smbus
-bus = smbus.SMBus(1)
+#import smbus
+#bus = smbus.SMBus(1)
 
 from IMU_REGISTERS import *
 from sensors import sensor
@@ -119,6 +119,7 @@ def detect(address, expectedResp):
             raise IMUError(address)
 
 def detectImu():
+    global acc, gyr, mag, bar
     acc.detect()
     gyr.detect()
     mag.detect()
@@ -143,7 +144,7 @@ def detectImu():
 
 def init():
     return
-    
+
     # Init accelerometer
     writeACC(CTRL_REG5_XL, 0b00111000)  #z, y, x axis enabled for accelerometer
     writeACC(CTRL_REG6_XL, 0b00101000)  #+/- 16g

@@ -28,6 +28,6 @@ def loop():
 IMU.detectImu()
 IMU.init()
 
-while True:
+while False:
     loop()
     time.sleep(1)
