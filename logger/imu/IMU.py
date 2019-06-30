@@ -168,6 +168,6 @@ def initialize():
     writeMAG(CTRL_REG3_M, 0b00000000)   #continuos update
     writeMAG(CTRL_REG4_M, 0b00000000)   #lower power mode for Z axis
 
-def print():
+def printData():
     global tmp
     tmp.readTemp()

@@ -8,11 +8,11 @@ import time
 import math
 from imu import IMU
 import datetime
-import os
+#import os
 
 def loop():
-    os.system('clear')
-    IMU.print()
+    system('clear')
+    IMU.printData()
     return
     #ACCx = IMU.readACCx()
     #ACCy = IMU.readACCy()
