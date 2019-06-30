@@ -35,7 +35,7 @@ class Accelerometer(Sensor):
 
 class Gyroscope(Sensor):
     def __init__(self, bus):
-        Sensor.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
+        Sensor.__init__(self, bus, 0x6A, 0x67, "Gyroscope")
 
 class Magnetometer(Sensor):
     def __init__(self, bus):
