@@ -9,7 +9,7 @@ from sensors import sensor
 acc = sensor.Accelerometer(bus)
 gyr = sensor.Gyroscope(bus)
 mag = sensor.Magnetometer(bus)
-prs = sensor.Pressure(bus)
+tmp = sensor.Thermostat(bus)
 
 #///////////
 #// Write //
@@ -119,12 +119,12 @@ def detect_old(address, expectedResp):
             raise IMUError(address)
 
 def detect():
-    global acc, gyr, mag, prs
+    global acc, gyr, mag, tmp
     try:
         acc.detect()
         gyr.detect()
         mag.detect()
-        prs.detect()
+        tmp.detect()
     except sensor.SensorError as e:
         print "Could not detect %s\n" % e.name
         return False
@@ -145,13 +145,15 @@ def detect():
     time.sleep(1)
 
 def initialize():
-    global acc, gyr, mag, prs
+    global acc, gyr, mag, tmp
     acc.initialize()
     gyr.initialize()
     mag.initialize()
-    prs.initialize()
+    tmp.initialize()
 
     print "\n"
+    
+    tmp.read()
     return
 
     # Init accelerometer

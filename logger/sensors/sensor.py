@@ -45,8 +45,8 @@ class Magnetometer(Sensor):
         Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
 
 class Pressure(Sensor):
-    def __init__(self, bus):
-        Sensor.__init__(self, bus, 0x77, 0x58, "Pressure")
+    def __init__(self, bus, name):
+        Sensor.__init__(self, bus, 0x77, 0x58, name)
         self.idRegister = 0xD0
 
     def initialize(self):
@@ -67,7 +67,11 @@ class Pressure(Sensor):
         if self.trim["T3"] > 32767:
             self.trim["T3"] -= 65536
 
-    def readTemp(self):
+class Thermostat(Pressure):
+    def __init__(self, bus):
+        Pressure.__init__(self, bus, "Thermostat")
+
+    def read(self):
         data = self.readBlock(0xF7, 8)
 
         adc_t = ((data[3] * 65536) + (data[4] * 256) + (data[5] & 0xF0)) / 16
