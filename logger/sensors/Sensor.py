@@ -12,6 +12,7 @@ class Sensor():
             resp = self.read(WHO_AM_I_REG)
         except IOError as ioe:
             #raise IMUError(address)
+            print("\nError")
         else:
             print("\nGot: %s" % (resp))
             if (False):
