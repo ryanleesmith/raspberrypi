@@ -14,6 +14,7 @@ def loop():
 
 if IMU.detect():
     IMU.initialize()
+    time.sleep(1)
 
     while True:
         loop()
