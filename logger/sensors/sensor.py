@@ -44,7 +44,7 @@ class Magnetometer(Sensor):
 
 class Pressure(Sensor):
     def __init__(self, bus):
-        Sensor.__init__(self, bus, 0x77, 0, "Pressure")
+        Sensor.__init__(self, bus, 0x77, 0x58, "Pressure")
         self.idRegister = 0xD0
         self.readTrim()
         self.write(0xF4, 0x27)
