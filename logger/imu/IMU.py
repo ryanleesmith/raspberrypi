@@ -7,6 +7,9 @@ from IMU_REGISTERS import *
 from sensors import sensor
 
 acc = sensor.Accelerometer(bus)
+gyr = sensor.Gyroscope(bus)
+mag = sensor.Magnetometer(bus)
+bar = sensor.Barometer(bus)
 
 #///////////
 #// Write //
@@ -117,6 +120,9 @@ def detect(address, expectedResp):
 
 def detectImu():
     acc.detect()
+    gyr.detect()
+    mag.detect()
+    bar.detect()
 
     return
 
@@ -136,6 +142,8 @@ def detectImu():
     time.sleep(1)
 
 def init():
+    return
+    
     # Init accelerometer
     writeACC(CTRL_REG5_XL, 0b00111000)  #z, y, x axis enabled for accelerometer
     writeACC(CTRL_REG6_XL, 0b00101000)  #+/- 16g

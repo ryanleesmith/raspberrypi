@@ -29,3 +29,15 @@ class Sensor():
 class Accelerometer(Sensor):
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x6A, "Accelerometer")
+
+class Gyroscope(Sensor):
+    def __init__(self, bus):
+        Sensor.__init__(self, bus, 0x6A, "Gyroscope")
+
+class Magnetometer(Sensor):
+    def __init__(self, bus):
+        Sensor.__init__(self, bus, 0x1C, "Magnetometer")
+
+class Barometer(Sensor):
+    def __init__(self, bus):
+        Sensor.__init__(self, bus, 0x77, "Barometer")
