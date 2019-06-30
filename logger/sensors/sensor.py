@@ -1,21 +1,21 @@
 class Sensor():
-    WHO_AM_I_REG = 0x0F
-
-    def __init__(self, bus, address, name):
+    def __init__(self, bus, address, id, name):
+        self.idRegister = 0x0F
         self.bus = bus
         self.address = address
+        self.id = id
         self.name = name
 
     def detect(self):
         try:
             print("Detecting %s..." % (self.name))
-            resp = self.read(Sensor.WHO_AM_I_REG)
+            id = self.read(self.idRegister)
         except IOError as ioe:
             #raise IMUError(address)
             print("\nError")
         else:
-            if (resp != self.WHO_AM_I):
-                print("Unexpected: %s\n" % (resp))
+            if (id != self.id):
+                print("Unexpected: %s\n" % (id))
                 #raise IMUError(address)
             else:
                 print("Found!\n")
@@ -32,23 +32,20 @@ class Sensor():
 
 class Accelerometer(Sensor):
     def __init__(self, bus):
-        self.WHO_AM_I = 0x68
-        Sensor.__init__(self, bus, 0x6A, "Accelerometer")
+        Sensor.__init__(self, bus, 0x6A, 0x68, "Accelerometer")
 
 class Gyroscope(Sensor):
     def __init__(self, bus):
-        self.WHO_AM_I = 0x68
-        Sensor.__init__(self, bus, 0x6A, "Gyroscope")
+        Sensor.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
 
 class Magnetometer(Sensor):
     def __init__(self, bus):
-        self.WHO_AM_I = 0x3D
-        Sensor.__init__(self, bus, 0x1C, "Magnetometer")
+        Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
 
 class Pressure(Sensor):
     def __init__(self, bus):
-        self.WHO_AM_I = 0
-        Sensor.__init__(self, bus, 0x77, "Pressure")
+        Sensor.__init__(self, bus, 0x77, 0, "Pressure")
+        self.idRegister = 0xD0
         self.readTrim()
         self.write(0xF4, 0x27)
         self.write(0xF5, 0xA0)
