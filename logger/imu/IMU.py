@@ -129,7 +129,6 @@ def detect():
         print "Could not detect %s\n" % e.name
         return False
     else:
-        #prs.readTemp()
         return True
 
     try:
@@ -152,8 +151,6 @@ def initialize():
     tmp.initialize()
 
     print "\n"
-    
-    tmp.read()
     return
 
     # Init accelerometer
@@ -170,3 +167,7 @@ def initialize():
     writeMAG(CTRL_REG2_M, 0b01000000)   #+/-12gauss
     writeMAG(CTRL_REG3_M, 0b00000000)   #continuos update
     writeMAG(CTRL_REG4_M, 0b00000000)   #lower power mode for Z axis
+
+def print():
+    global tmp
+    tmp.readTemp()

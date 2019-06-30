@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys
-from os import path
+from os import path, system
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import time
@@ -11,6 +11,8 @@ import datetime
 import os
 
 def loop():
+    os.system('clear')
+    IMU.print()
     return
     #ACCx = IMU.readACCx()
     #ACCy = IMU.readACCy()
