@@ -1,4 +1,4 @@
-import Sensor
+from Sensor import Sensor
 
 class Accelerometer(Sensor):
     def __init__(self, bus):
