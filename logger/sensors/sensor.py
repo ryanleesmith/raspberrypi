@@ -49,7 +49,7 @@ class Magnetometer(Sensor):
 class Pressure(Sensor):
     trim = {}
     data = []
-    tFine
+    tFine = 0
     lastRead = 0
 
     def __init__(self, bus, name):
