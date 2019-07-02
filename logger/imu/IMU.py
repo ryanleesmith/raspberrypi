@@ -7,16 +7,16 @@ from sensors import sensor
 acc = sensor.Accelerometer(bus)
 gyr = sensor.Gyroscope(bus)
 mag = sensor.Magnetometer(bus)
-tmp = sensor.Thermostat(bus)
+thm = sensor.Thermometer(bus)
 bar = sensor.Barometer(bus)
 
 def detect():
-    global acc, gyr, mag, tmp, bar
+    global acc, gyr, mag, thm, bar
     try:
         acc.detect()
         gyr.detect()
         mag.detect()
-        tmp.detect()
+        thm.detect()
         bar.detect()
     except sensor.SensorError as e:
         print "Could not detect %s\n" % e.name
@@ -25,15 +25,15 @@ def detect():
         return True
 
 def initialize():
-    global acc, gyr, mag, tmp, bar
+    global acc, gyr, mag, thm, bar
     acc.initialize()
     gyr.initialize()
     mag.initialize()
-    tmp.initialize()
+    thm.initialize()
     bar.initialize()
     return
 
 def printData():
-    global tmp, bar
-    print(tmp)
+    global thm, bar
+    print(thm)
     print(bar)
