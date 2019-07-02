@@ -47,6 +47,9 @@ class Magnetometer(Sensor):
         Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
 
 class Pressure(Sensor):
+    CTRL_MEAS_REGISTER = 0xF4
+    CONFIG_REGISTER = 0xF5
+
     initialized = False
     trim = {}
     data = []
@@ -61,8 +64,12 @@ class Pressure(Sensor):
         if not Pressure.initialized:
             Pressure.initialized = True
             self.readTrim()
-            self.write(0xF4, 0x27)
-            self.write(0xF5, 0xA0)
+            # Write control measurement register
+            # T(7-5) P(4-2) M(1-0)
+            # 0x27 = 001 001 11
+            # 0x4F = 010 011 11
+            self.write(Pressure.CTRL_MEAS_REGISTER, 0x4F)
+            self.write(Pressure.CONFIG_REGISTER, 0xA0)
         
         Sensor.initialize(self)
 
@@ -105,6 +112,7 @@ class Pressure(Sensor):
 
     def readData(self):
         currTime = int(round(time() * 1000))
+        # BMP Sensor Standby set to 1000ms
         if Pressure.lastRead + 1000 < currTime:
             Pressure.data = self.readBlock(0xF7, 8)
             adc_t = ((Pressure.data[3] * 65536) + (Pressure.data[4] * 256) + (Pressure.data[5] & 0xF0)) / 16
@@ -117,13 +125,13 @@ class Thermometer(Pressure):
     def __init__(self, bus):
         Pressure.__init__(self, bus, "Thermometer")
 
-    def readTemp(self):
+    def readTemperature(self):
         self.readData()
         cTemp = Pressure.fineTemperature / 5120.0
         return cTemp * 1.8 + 32
 
     def __str__(self):
-        return "Temperature: %.2f F\n" % self.readTemp()
+        return "Temperature: %.2f F\n" % self.readTemperature()
 
 class Barometer(Pressure):
     def __init__(self, bus):
