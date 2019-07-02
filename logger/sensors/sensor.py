@@ -106,7 +106,6 @@ class Pressure(Sensor):
     def readData(self):
         currTime = int(round(time() * 1000))
         if Pressure.lastRead + 1000 < currTime:
-            print "Reading...\n"
             Pressure.data = self.readBlock(0xF7, 8)
             adc_t = ((Pressure.data[3] * 65536) + (Pressure.data[4] * 256) + (Pressure.data[5] & 0xF0)) / 16
             var1 = ((adc_t) / 16384.0 - (Pressure.trim["T1"]) / 1024.0) * (Pressure.trim["T2"])
