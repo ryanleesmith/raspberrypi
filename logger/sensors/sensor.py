@@ -168,10 +168,11 @@ class Altimeter(Pressure):
         self.readData()
         cTemp = Pressure.fineTemperature / 5120.0
         hpaPres = Pressure.finePressure / 100
-        return ((((1013.25 / hpaPres) ** (1 / 5.257)) - 1) * (cTemp + 273.15)) / 0.0065
+        mAlt = ((((1013.25 / hpaPres) ** (1 / 5.257)) - 1) * (cTemp + 273.15)) / 0.0065
+        return mAlt * 3.281
 
     def __str__(self):
-        return "Altitude: %.2f m\n" % self.readAltitude()
+        return "Altitude: %.2f ft\n" % self.readAltitude()
 
 class SensorError(Exception):
     def __init__(self, name):
