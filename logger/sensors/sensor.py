@@ -101,8 +101,7 @@ class Pressure(Sensor):
         if self.lastRead + 1000 < currTime:
             print "Reading...\n"
             self.data = self.readBlock(0xF7, 8)
-
-        self.lastRead = currTime
+            self.lastRead = currTime
 
 class Thermostat(Pressure):
     def __init__(self, bus):
