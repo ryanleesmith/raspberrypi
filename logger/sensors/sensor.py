@@ -80,9 +80,11 @@ class Thermostat(Pressure):
         var2 = (((adc_t) / 131072.0 - (self.trim["T1"]) / 8192.0) * ((adc_t)/131072.0 - (self.trim["T1"])/8192.0)) * (self.trim["T3"])
         #t_fine = (var1 + var2)
         cTemp = (var1 + var2) / 5120.0
-        fTemp = cTemp * 1.8 + 32
+        return cTemp * 1.8 + 32
 
-        print "Temperature: %.2f F\n" % fTemp
+    def __str__(self):
+        return "Temperature: %.2f F\n" % self.readTemp()
+
 
 class SensorError(Exception):
     def __init__(self, name):

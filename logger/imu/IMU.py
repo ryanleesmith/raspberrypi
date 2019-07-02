@@ -32,4 +32,4 @@ def initialize():
 
 def printData():
     global tmp
-    tmp.readTemp()
+    print(tmp)
