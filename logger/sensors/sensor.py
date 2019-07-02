@@ -1,4 +1,4 @@
-import time
+from time import time
 
 class Sensor():
     def __init__(self, bus, address, id, name):
