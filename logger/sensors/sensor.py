@@ -47,11 +47,14 @@ class Magnetometer(Sensor):
         Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
 
 class Pressure(Sensor):
+    trim = {}
+    data = []
+    tFine
+    lastRead = 0
+
     def __init__(self, bus, name):
         Sensor.__init__(self, bus, 0x77, 0x58, name)
         self.idRegister = 0xD0
-        self.lastRead = 0
-        self.totalReads = 0
 
     def initialize(self):
         self.readTrim()
@@ -60,7 +63,6 @@ class Pressure(Sensor):
         Sensor.initialize(self)
 
     def readTrim(self):
-        self.trim = {}
         block = self.readBlock(0x88, 24)
 
         self.trim["T1"] = block[1] * 256 + block[0]
@@ -100,6 +102,7 @@ class Pressure(Sensor):
     def readData(self):
         currTime = int(round(time() * 1000))
         if self.lastRead + 1000 < currTime:
+            print "Reading...\n"
             self.data = self.readBlock(0xF7, 8)
             adc_t = ((self.data[3] * 65536) + (self.data[4] * 256) + (self.data[5] & 0xF0)) / 16
             var1 = ((adc_t) / 16384.0 - (self.trim["T1"]) / 1024.0) * (self.trim["T2"])
