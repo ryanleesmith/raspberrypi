@@ -12,10 +12,21 @@ def loop():
     IMU.printData()
     return
 
-if IMU.detect():
-    IMU.initialize()
-    time.sleep(1)
+def main():
+    try:
+        if IMU.detect():
+            IMU.initialize()
+            time.sleep(1)
 
-    while True:
-        loop()
-        time.sleep(1)
+            while True:
+                loop()
+                time.sleep(1)
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
+
+if __name__ == "__main__":
+    main()
