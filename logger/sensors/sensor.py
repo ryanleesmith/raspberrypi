@@ -100,7 +100,7 @@ class Pressure(Sensor):
     def readData(self):
         currTime = int(round(time() * 1000))
         if self.lastRead + 1000 < currTime:
-            self.totalReads++
+            self.totalReads += 1
             self.data = self.readBlock(0xF7, 8)
             self.lastRead = currTime
 
