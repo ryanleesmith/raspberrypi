@@ -54,6 +54,7 @@ class Pressure(Sensor):
     trim = {}
     data = []
     fineTemperature = 0
+    finePressure = 0
     lastRead = 0
 
     def __init__(self, bus, name):
@@ -115,10 +116,25 @@ class Pressure(Sensor):
         # BMP Sensor Standby set to 1000ms
         if Pressure.lastRead + 1000 < currTime:
             Pressure.data = self.readBlock(0xF7, 8)
+
             adc_t = ((Pressure.data[3] * 65536) + (Pressure.data[4] * 256) + (Pressure.data[5] & 0xF0)) / 16
             var1 = ((adc_t) / 16384.0 - (Pressure.trim["T1"]) / 1024.0) * (Pressure.trim["T2"])
             var2 = (((adc_t) / 131072.0 - (Pressure.trim["T1"]) / 8192.0) * ((adc_t)/131072.0 - (Pressure.trim["T1"])/8192.0)) * (Pressure.trim["T3"])
             Pressure.fineTemperature = var1 + var2
+
+            adc_p = ((Pressure.data[0] * 65536) + (Pressure.data[1] * 256) + (Pressure.data[2] & 0xF0)) / 16
+            var1 = (Pressure.fineTemperature / 2.0) - 64000.0
+            var2 = var1 * var1 * (Pressure.trim["P6"]) / 32768.0
+            var2 = var2 + var1 * (Pressure.trim["P5"]) * 2.0
+            var2 = (var2 / 4.0) + ((Pressure.trim["P4"]) * 65536.0)
+            var1 = ((Pressure.trim["P3"]) * var1 * var1 / 524288.0 + (Pressure.trim["P2"]) * var1) / 524288.0
+            var1 = (1.0 + var1 / 32768.0) * (Pressure.trim["P1"])
+            p = 1048576.0 - adc_p
+            p = (p - (var2 / 4096.0)) * 6250.0 / var1
+            var1 = (Pressure.trim["P9"]) * p * p / 2147483648.0
+            var2 = p * (Pressure.trim["P8"]) / 32768.0
+            Pressure.finePressure = p + (var1 + var2 + (Pressure.trim["P7"])) / 16.0
+
             Pressure.lastRead = currTime
 
 class Thermometer(Pressure):
@@ -139,23 +155,23 @@ class Barometer(Pressure):
 
     def readPressure(self):
         self.readData()
-        adc_p = ((Pressure.data[0] * 65536) + (Pressure.data[1] * 256) + (Pressure.data[2] & 0xF0)) / 16
-
-        var1 = (Pressure.fineTemperature / 2.0) - 64000.0
-        var2 = var1 * var1 * (Pressure.trim["P6"]) / 32768.0
-        var2 = var2 + var1 * (Pressure.trim["P5"]) * 2.0
-        var2 = (var2 / 4.0) + ((Pressure.trim["P4"]) * 65536.0)
-        var1 = ((Pressure.trim["P3"]) * var1 * var1 / 524288.0 + (Pressure.trim["P2"]) * var1) / 524288.0
-        var1 = (1.0 + var1 / 32768.0) * (Pressure.trim["P1"])
-        p = 1048576.0 - adc_p
-        p = (p - (var2 / 4096.0)) * 6250.0 / var1
-        var1 = (Pressure.trim["P9"]) * p * p / 2147483648.0
-        var2 = p * (Pressure.trim["P8"]) / 32768.0
-        return (p + (var1 + var2 + (Pressure.trim["P7"])) / 16.0) / 100
+        return Pressure.finePressure / 100
 
     def __str__(self):
         return "Pressure: %.2f hPa\n" % self.readPressure()
 
+class Altimeter(Pressure):
+    def __init__(self, bus):
+        Pressure.__init__(self, bus, "Altimeter")
+
+    def readAltitude(self):
+        self.readData()
+        cTemp = Pressure.fineTemperature / 5120.0
+        hpaPres = Pressure.finePressure / 100
+        return ((((1013.25 / hpaPres) ** (1 / 5.257)) - 1) * (cTemp + 273.15)) / 0.0065
+
+    def __str__(self):
+        return "Altitude: %.2f m\n" % self.readAltitude()
 
 class SensorError(Exception):
     def __init__(self, name):
