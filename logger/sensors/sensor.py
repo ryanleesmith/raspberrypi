@@ -66,11 +66,15 @@ class Pressure(Sensor):
             Pressure.initialized = True
             self.readTrim()
             # Write control measurement register
-            # T(7-5) P(4-2) M(1-0)
+            # TEMP(7-5) PRES(4-2) MODE(1-0)
             # 0x27 = 001 001 11
             # 0x4F = 010 011 11
             self.write(Pressure.CTRL_MEAS_REGISTER, 0x4F)
-            self.write(Pressure.CONFIG_REGISTER, 0xA0)
+            # Write config register
+            # STBY(7-5) FLTR(4-2) SPIW(0)
+            # 0xA0 = 101 000 00
+            # 0xB0 = 101 100 00
+            self.write(Pressure.CONFIG_REGISTER, 0xB0)
         
         Sensor.initialize(self)
 
