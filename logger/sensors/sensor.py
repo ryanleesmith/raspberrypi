@@ -58,7 +58,7 @@ class Pressure(Sensor):
         self.idRegister = 0xD0
 
     def initialize(self):
-        if !Pressure.initialized:
+        if (!Pressure.initialized):
             Pressure.initialized = True
             self.readTrim()
             self.write(0xF4, 0x27)
