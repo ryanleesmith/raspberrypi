@@ -97,7 +97,7 @@ class Pressure(Sensor):
             self.trim["P9"] -= 65536
 
     def readData(self):
-        currTime = time()
+        currTime = int(round(time() * 1000))
         if self.lastRead + 1000 < currTime:
             print "Reading...\n"
             self.data = self.readBlock(0xF7, 8)
