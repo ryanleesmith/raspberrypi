@@ -100,8 +100,11 @@ class Pressure(Sensor):
     def readData(self):
         currTime = int(round(time() * 1000))
         if self.lastRead + 1000 < currTime:
-            self.totalReads += 1
             self.data = self.readBlock(0xF7, 8)
+            adc_t = ((self.data[3] * 65536) + (self.data[4] * 256) + (self.data[5] & 0xF0)) / 16
+            var1 = ((adc_t) / 16384.0 - (self.trim["T1"]) / 1024.0) * (self.trim["T2"])
+            var2 = (((adc_t) / 131072.0 - (self.trim["T1"]) / 8192.0) * ((adc_t)/131072.0 - (self.trim["T1"])/8192.0)) * (self.trim["T3"])
+            self.tFine = var1 + var2
             self.lastRead = currTime
 
 class Thermostat(Pressure):
@@ -110,35 +113,34 @@ class Thermostat(Pressure):
 
     def readTemp(self):
         self.readData()
-
-        adc_t = ((self.data[3] * 65536) + (self.data[4] * 256) + (self.data[5] & 0xF0)) / 16
-
-        var1 = ((adc_t) / 16384.0 - (self.trim["T1"]) / 1024.0) * (self.trim["T2"])
-        var2 = (((adc_t) / 131072.0 - (self.trim["T1"]) / 8192.0) * ((adc_t)/131072.0 - (self.trim["T1"])/8192.0)) * (self.trim["T3"])
-        #t_fine = (var1 + var2)
-        cTemp = (var1 + var2) / 5120.0
+        cTemp = self.tFine / 5120.0
         return cTemp * 1.8 + 32
 
     def __str__(self):
-        return "Temperature: %.2f F (Sampled %d times)\n" % (self.readTemp(), self.totalReads)
+        return "Temperature: %.2f F\n" % self.readTemp()
 
 class Barometer(Pressure):
     def __init__(self, bus):
         Pressure.__init__(self, bus, "Barometer")
 
     def readPressure(self):
-        data = self.readBlock(0xF7, 8)
+        self.readData()
+        adc_p = ((self.data[0] * 65536) + (self.data[1] * 256) + (self.data[2] & 0xF0)) / 16
 
-        adc_t = ((data[3] * 65536) + (data[4] * 256) + (data[5] & 0xF0)) / 16
-
-        var1 = ((adc_t) / 16384.0 - (self.trim["T1"]) / 1024.0) * (self.trim["T2"])
-        var2 = (((adc_t) / 131072.0 - (self.trim["T1"]) / 8192.0) * ((adc_t)/131072.0 - (self.trim["T1"])/8192.0)) * (self.trim["T3"])
-        #t_fine = (var1 + var2)
-        cTemp = (var1 + var2) / 5120.0
-        return cTemp * 1.8 + 32
+        var1 = (self.tFine / 2.0) - 64000.0
+        var2 = var1 * var1 * (self.trim["P6"]) / 32768.0
+        var2 = var2 + var1 * (self.trim["P5"]) * 2.0
+        var2 = (var2 / 4.0) + ((self.trim["P4"]) * 65536.0)
+        var1 = ((self.trim["P3"]) * var1 * var1 / 524288.0 + (self.trim["P2"]) * var1) / 524288.0
+        var1 = (1.0 + var1 / 32768.0) * (self.trim["P1"])
+        p = 1048576.0 - adc_p
+        p = (p - (var2 / 4096.0)) * 6250.0 / var1
+        var1 = (self.trim["P9"]) * p * p / 2147483648.0
+        var2 = p * (self.trim["P8"]) / 32768.0
+        return (p + (var1 + var2 + (self.trim["P7"])) / 16.0) / 100
 
     def __str__(self):
-        return "Temperature: %.2f F (Sampled %d times)\n" % (self.readTemp(), self.totalReads)
+        return "Pressure: %.2f hPa\n" % self.readPressure()
 
 
 class SensorError(Exception):
