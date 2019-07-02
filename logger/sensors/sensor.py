@@ -51,6 +51,7 @@ class Pressure(Sensor):
         Sensor.__init__(self, bus, 0x77, 0x58, name)
         self.idRegister = 0xD0
         self.lastRead = 0
+        self.totalReads = 0
 
     def initialize(self):
         self.readTrim()
@@ -99,7 +100,7 @@ class Pressure(Sensor):
     def readData(self):
         currTime = int(round(time() * 1000))
         if self.lastRead + 1000 < currTime:
-            print "Reading...\n"
+            self.totalReads++
             self.data = self.readBlock(0xF7, 8)
             self.lastRead = currTime
 
@@ -137,7 +138,7 @@ class Barometer(Pressure):
         return cTemp * 1.8 + 32
 
     def __str__(self):
-        return "Temperature: %.2f F\n" % self.readTemp()
+        return "Temperature: %.2f F (Sampled %d times)\n" % (self.readTemp(), self.totalReads)
 
 
 class SensorError(Exception):
