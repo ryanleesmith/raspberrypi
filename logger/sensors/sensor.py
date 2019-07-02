@@ -120,7 +120,7 @@ class Thermostat(Pressure):
         return cTemp * 1.8 + 32
 
     def __str__(self):
-        return "Temperature: %.2f F\n" % self.readTemp()
+        return "Temperature: %.2f F (Sampled %d times)\n" % (self.readTemp(), self.totalReads)
 
 class Barometer(Pressure):
     def __init__(self, bus):
