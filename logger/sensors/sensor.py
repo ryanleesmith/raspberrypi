@@ -1,7 +1,7 @@
 from time import time
 
-def convert(low, high):
-    combined = low | high << 8
+def convert(bits):
+    combined = bits[0] | bits[1] << 8
     return combined if combined < 32768 else combined - 65536
 
 class Sensor():
@@ -48,12 +48,9 @@ class Accelerometer(Sensor):
     AXIS_ENABLE_REGISTER = 0x1F
     OUTPUT_CONFIG_REGISTER = 0x20
 
-    X_LP_REGISTER = 0x28
-    X_HP_REGISTER = 0x29
-    Y_LP_REGISTER = 0x2A
-    Y_HP_REGISTER = 0x2B
-    Z_LP_REGISTER = 0x2C
-    Z_HP_REGISTER = 0x2D
+    X_REGISTER = 0x28
+    Y_REGISTER = 0x2A
+    Z_REGISTER = 0x2C
 
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x6A, 0x68, "Accelerometer")
@@ -68,15 +65,13 @@ class Accelerometer(Sensor):
         self.write(Accelerometer.OUTPUT_CONFIG_REGISTER, 0b00100000)
 
     def readX(self):
-        data = self.readBlock(Accelerometer.X_LP_REGISTER, 2)
-        return convert(data[0], data[1])
-        #return self.readRange(Accelerometer.X_LP_REGISTER, Accelerometer.X_HP_REGISTER)
+        return convert(self.readBlock(Accelerometer.X_REGISTER, 2))
 
     def readY(self):
-        return self.readRange(Accelerometer.Y_LP_REGISTER, Accelerometer.Y_HP_REGISTER)
+        return convert(self.readBlock(Accelerometer.Y_REGISTER, 2))
 
     def readZ(self):
-        return self.readRange(Accelerometer.Z_LP_REGISTER, Accelerometer.Z_HP_REGISTER)
+        return convert(self.readBlock(Accelerometer.Z_REGISTER, 2))
 
     def __str__(self):
         return "Accel\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
