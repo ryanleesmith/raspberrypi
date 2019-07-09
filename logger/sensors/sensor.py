@@ -34,12 +34,6 @@ class Sensor():
     def readBlock(self, register, size):
         return self.bus.read_i2c_block_data(self.address, register, size)
 
-    def readRange(self, lowPassRegister, highPassRegister):
-        low = self.read(lowPassRegister)
-        high = self.read(highPassRegister)
-        combined = (low | high <<8)
-        return combined if combined < 32768 else combined - 65536
-
     def write(self, register, value):
         self.bus.write_byte_data(self.address, register, value)
         return -1
@@ -81,12 +75,9 @@ class Gyroscope(Sensor):
     OUTPUT_CONFIG_REGISTER = 0x10
     ORIENTATION_REGISTER = 0x13
 
-    X_LP_REGISTER = 0x18
-    X_HP_REGISTER = 0x19
-    Y_LP_REGISTER = 0x1A
-    Y_HP_REGISTER = 0x1B
-    Z_LP_REGISTER = 0x1C
-    Z_HP_REGISTER = 0x1D
+    X_REGISTER = 0x18
+    Y_REGISTER = 0x1A
+    Z_REGISTER = 0x1C
 
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
@@ -105,13 +96,13 @@ class Gyroscope(Sensor):
         self.write(Gyroscope.ORIENTATION_REGISTER, 0b00111000)
 
     def readX(self):
-        return self.readRange(Gyroscope.X_LP_REGISTER, Gyroscope.X_HP_REGISTER)
+        return convert(self.readBlock(Gyroscope.X_REGISTER, 2))
 
     def readY(self):
-        return self.readRange(Gyroscope.Y_LP_REGISTER, Gyroscope.Y_HP_REGISTER)
+        return convert(self.readBlock(Gyroscope.Y_REGISTER, 2))
 
     def readZ(self):
-        return self.readRange(Gyroscope.Z_LP_REGISTER, Gyroscope.Z_HP_REGISTER)
+        return convert(self.readBlock(Gyroscope.Z_REGISTER, 2))
 
     def __str__(self):
         return "Gyro\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
@@ -122,12 +113,9 @@ class Magnetometer(Sensor):
     MODE_CONFIG_REGISTER = 0x22
     Z_MODE_CONFIG_REGISTER = 0x23
 
-    X_LP_REGISTER = 0x28
-    X_HP_REGISTER = 0x29
-    Y_LP_REGISTER = 0x2A
-    Y_HP_REGISTER = 0x2B
-    Z_LP_REGISTER = 0x2C
-    Z_HP_REGISTER = 0x2D
+    X_REGISTER = 0x28
+    Y_REGISTER = 0x2A
+    Z_REGISTER = 0x2C
 
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
@@ -150,13 +138,13 @@ class Magnetometer(Sensor):
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
     def readX(self):
-        return self.readRange(Magnetometer.X_LP_REGISTER, Magnetometer.X_HP_REGISTER)
+        return convert(self.readBlock(Magnetometer.X_REGISTER, 2))
 
     def readY(self):
-        return self.readRange(Magnetometer.Y_LP_REGISTER, Magnetometer.Y_HP_REGISTER)
+        return convert(self.readBlock(Magnetometer.Y_REGISTER, 2))
 
     def readZ(self):
-        return self.readRange(Magnetometer.Z_LP_REGISTER, Magnetometer.Z_HP_REGISTER)
+        return convert(self.readBlock(Magnetometer.Z_REGISTER, 2))
 
     def __str__(self):
         return "Mag\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
