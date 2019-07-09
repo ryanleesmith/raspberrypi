@@ -60,7 +60,7 @@ class Accelerometer(Sensor):
         self.write(Accelerometer.AXIS_ENABLE_REGISTER, 0b00111000)
 
         # Write output config register
-        # ODR(7-5) FULLSCALE(4-3) BWTOGGLE(2) BWVAL(1-0) 
+        # ODR(7-5) FULLSCALE(4-3) BWTOGGLE(2) BWVAL(1-0)
         self.write(Accelerometer.OUTPUT_CONFIG_REGISTER, 0b00100000)
 
     def readX(self):
@@ -96,7 +96,7 @@ class Gyroscope(Sensor):
         self.write(Gyroscope.AXIS_ENABLE_REGISTER, 0b00111000)
 
         # Write output config register
-        # ODR(7-5) FULLSCALE(4-3) NON(2) BWVAL(1-0) 
+        # ODR(7-5) FULLSCALE(4-3) NON(2) BWVAL(1-0)
         self.write(Gyroscope.OUTPUT_CONFIG_REGISTER, 0b10111000)
 
         # Write orientation register
@@ -116,8 +116,49 @@ class Gyroscope(Sensor):
         return "Gyro\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
 class Magnetometer(Sensor):
+    OUTPUT_CONFIG_REGISTER = 0x20
+    SCALE_CONFIG_REGISTER = 0x21
+    MODE_CONFIG_REGISTER = 0x22
+    Z_MODE_CONFIG_REGISTER = 0x23
+
+    X_LP_REGISTER = 0x28
+    X_HP_REGISTER = 0x29
+    Y_LP_REGISTER = 0x2A
+    Y_HP_REGISTER = 0x2B
+    Z_LP_REGISTER = 0x2C
+    Z_HP_REGISTER = 0x2D
+
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
+
+    def initialize(self):
+        # Write x/y output config register
+        # TEMPCOMP(7) MODE(6-5) ODR(4-2) FASTODR(1) TEST(0)
+        self.write(Magnetometer.OUTPUT_CONFIG_REGISTER, 0b10111100)
+        
+        # Write scale config register
+        # NON(7) FULLSCALE(6-5) NON(4) REBOOT(3) SOFTRESET(2) NON(1-0)
+        self.write(Magnetometer.SCALE_CONFIG_REGISTER, 0b01000000)
+
+        # Write system operating mode config register
+        # NON(7-6) LOWPOWERMODE(5) NON(4-2) MODE(1-0)
+        self.write(Magnetometer.MODE_CONFIG_REGISTER, 0b00000000)
+
+        # Write z-axis operating mode config register
+        # NON(7-4) Z-MODE(3-2) BLE(1) NON(0)
+        self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
+
+    def readX(self):
+        return self.readRange(Magnetometer.X_LP_REGISTER, Magnetometer.X_HP_REGISTER)
+
+    def readY(self):
+        return self.readRange(Magnetometer.Y_LP_REGISTER, Magnetometer.Y_HP_REGISTER)
+
+    def readZ(self):
+        return self.readRange(Magnetometer.Z_LP_REGISTER, Magnetometer.Z_HP_REGISTER)
+
+    def __str__(self):
+        return "Mag\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
 class IMU():
     def __init__(self, bus):
@@ -136,7 +177,7 @@ class IMU():
         self.mag.initialize()
 
     def __str__(self):
-        return str(self.acc) + str(self.gyr)
+        return str(self.acc) + str(self.gyr) + str(self.mag)
 
 class Pressure(Sensor):
     CTRL_MEAS_REGISTER = 0xF4
