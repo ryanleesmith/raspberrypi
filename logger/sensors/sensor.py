@@ -1,5 +1,9 @@
 from time import time
 
+def convert(low, high):
+    combined = low | high << 8
+    return combined if combined < 32768 else combined - 65536
+
 class Sensor():
     def __init__(self, bus, address, id, name):
         self.idRegister = 0x0F
@@ -64,7 +68,9 @@ class Accelerometer(Sensor):
         self.write(Accelerometer.OUTPUT_CONFIG_REGISTER, 0b00100000)
 
     def readX(self):
-        return self.readRange(Accelerometer.X_LP_REGISTER, Accelerometer.X_HP_REGISTER)
+        data = self.readBlock(Accelerometer.X_LP_REGISTER, 2)
+        return convert(data[0], data[1])
+        #return self.readRange(Accelerometer.X_LP_REGISTER, Accelerometer.X_HP_REGISTER)
 
     def readY(self):
         return self.readRange(Accelerometer.Y_LP_REGISTER, Accelerometer.Y_HP_REGISTER)
