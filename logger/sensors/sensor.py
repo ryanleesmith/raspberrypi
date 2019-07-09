@@ -30,24 +30,17 @@ class Sensor():
     def readBlock(self, register, size):
         return self.bus.read_i2c_block_data(self.address, register, size)
 
+    def readRange(self, lowPassRegister, highPassRegister):
+        low = self.read(lowPassRegister)
+        high = self.read(highPassRegister)
+        combined = (low | high <<8)
+        return combined if combined < 32768 else combined - 65536
+
     def write(self, register, value):
         self.bus.write_byte_data(self.address, register, value)
         return -1
 
-class IMU(Sensor):
-    def __init__(self, bus, address, id, name):
-        Sensor.__init__(self, bus, address, id, name)
-
-    def adjust(self, low, high):
-        combined = (low | high <<8)
-        return combined if combined < 32768 else combined - 65536
-
-    def readRange(self, lpReg, hpReg):
-        low = self.read(lpReg)
-        high = self.read(hpReg)
-        return self.adjust(low, high)
-
-class Accelerometer(IMU):
+class Accelerometer(Sensor):
     AXIS_ENABLE_REGISTER = 0x1F
     OUTPUT_CONFIG_REGISTER = 0x20
 
@@ -59,7 +52,7 @@ class Accelerometer(IMU):
     Z_HP_REGISTER = 0x2D
 
     def __init__(self, bus):
-        IMU.__init__(self, bus, 0x6A, 0x68, "Accelerometer")
+        Sensor.__init__(self, bus, 0x6A, 0x68, "Accelerometer")
 
     def initialize(self):
         # Write axis enablement register
@@ -82,7 +75,7 @@ class Accelerometer(IMU):
     def __str__(self):
         return "Accel\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
-class Gyroscope(IMU):
+class Gyroscope(Sensor):
     AXIS_ENABLE_REGISTER = 0x1E
     OUTPUT_CONFIG_REGISTER = 0x10
     ORIENTATION_REGISTER = 0x13
@@ -95,7 +88,7 @@ class Gyroscope(IMU):
     Z_HP_REGISTER = 0x1D
 
     def __init__(self, bus):
-        IMU.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
+        Sensor.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
 
     def initialize(self):
         # Write axis enablement register
@@ -122,9 +115,29 @@ class Gyroscope(IMU):
     def __str__(self):
         return "Gyro\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
-class Magnetometer(IMU):
+class Magnetometer(Sensor):
     def __init__(self, bus):
-        IMU.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
+        Sensor.__init__(self, bus, 0x1C, 0x3D, "Magnetometer")
+
+class IMU():
+    def __init__(self, bus):
+        self.acc = Accelerometer(bus)
+        self.gyr = Gyroscope(bus)
+        self.mag = Magnetometer(bus)
+
+    def detect(self):
+        self.acc.detect()
+        self.gyr.detect()
+        self.mag.detect()
+
+    def initialize(self):
+        self.acc.initialize()
+        self.gyr.initialize()
+        self.mag.initialize()
+
+    def __str__(self):
+        print(self.acc)
+        print(self.gyr)
 
 class Pressure(Sensor):
     CTRL_MEAS_REGISTER = 0xF4

@@ -4,19 +4,15 @@ bus = smbus.SMBus(1)
 
 from sensors import sensor
 
-acc = sensor.Accelerometer(bus)
-gyr = sensor.Gyroscope(bus)
-mag = sensor.Magnetometer(bus)
+imu = sensor.IMU(bus)
 thm = sensor.Thermometer(bus)
 bar = sensor.Barometer(bus)
 alt = sensor.Altimeter(bus)
 
 def detect():
-    global acc, gyr, mag, thm, bar, alt
+    global imu, thm, bar, alt
     try:
-        acc.detect()
-        gyr.detect()
-        mag.detect()
+        imu.detect()
         thm.detect()
         bar.detect()
         alt.detect()
@@ -27,19 +23,16 @@ def detect():
         return True
 
 def initialize():
-    global acc, gyr, mag, thm, bar, alt
-    acc.initialize()
-    gyr.initialize()
-    mag.initialize()
+    global imu, thm, bar, alt
+    imu.initialize()
     thm.initialize()
     bar.initialize()
     alt.initialize()
     return
 
 def printData():
-    global acc, gyr, thm, bar, alt
-    print(acc)
-    print(gyr)
+    global imu, thm, bar, alt
+    print(imu)
     print(thm)
     print(bar)
     print(alt)
