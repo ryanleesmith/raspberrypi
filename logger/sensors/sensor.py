@@ -136,8 +136,7 @@ class IMU():
         self.mag.initialize()
 
     def __str__(self):
-        print(self.acc)
-        print(self.gyr)
+        return str(self.acc) + str(self.gyr)
 
 class Pressure(Sensor):
     CTRL_MEAS_REGISTER = 0xF4
