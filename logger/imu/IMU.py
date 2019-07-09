@@ -37,7 +37,9 @@ def initialize():
     return
 
 def printData():
-    global thm, bar, alt
+    global acc, gyr, thm, bar, alt
+    print(acc)
+    print(gyr)
     print(thm)
     print(bar)
     print(alt)
