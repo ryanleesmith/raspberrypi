@@ -1,8 +1,6 @@
 from time import time
 
 def convert(bits, isUnsigned):
-    print(bits[0])
-    print(bits[1])
     combined = bits[0] | bits[1] << 8
     return combined if combined < 32768 or isUnsigned else combined - 65536
 
@@ -205,14 +203,6 @@ class Pressure(Sensor):
 
     def readTrim(self):
         block = self.readBlock(0x88, 24)
-
-        print(block[0])
-        print(block[1])
-        print(block[2])
-        print(block[3])
-        print(block[4])
-        print(block[5])
-        print(block[6])
 
         Pressure.trim["T1"] = convert([block[0], block[1]], True)
         Pressure.trim["T2"] = convert([block[2], block[3]], False)
