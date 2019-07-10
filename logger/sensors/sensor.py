@@ -204,6 +204,9 @@ class Pressure(Sensor):
     def readTrim(self):
         block = self.readBlock(0x88, 24)
 
+        print(block[1])
+        print(block[0])
+
         Pressure.trim["T1"] = block[1] * 256 + block[0]
         Pressure.trim["T2"] = block[3] * 256 + block[2]
         if Pressure.trim["T2"] > 32767:
