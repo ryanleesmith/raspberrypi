@@ -1,6 +1,8 @@
 from time import time
 
 def convert(bits):
+    print(bits[0])
+    print(bits[1])
     combined = bits[0] | bits[1] << 8
     return combined if combined < 32768 else combined - 65536
 
