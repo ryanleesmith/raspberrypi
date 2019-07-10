@@ -82,7 +82,7 @@ class Accelerometer(Sensor):
         else:
             angleY += 90.0
 
-        ouput = "Accel Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (x, y, z)
+        output = "Accel Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (x, y, z)
         output += "Accel Angle\tX: %.2f\t Y: %.2f\n" % (angleX, angleY)
         return output
 
