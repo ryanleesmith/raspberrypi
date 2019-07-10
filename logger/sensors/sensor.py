@@ -2,7 +2,7 @@ from time import time
 
 def convert(bits, isUnsigned):
     combined = bits[0] | bits[1] << 8
-    return combined if isUnsigned else combined & 0x7FFF
+    return combined if isUnsigned else combined & 0x10000
 
 class Sensor():
     def __init__(self, bus, address, id, name):
