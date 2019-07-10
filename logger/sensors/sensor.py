@@ -1,10 +1,13 @@
 from time import time
 
 def convert(bits):
+    return convert(bits, False)
+
+def convert(bits, isUnsigned):
     print(bits[0])
     print(bits[1])
     combined = bits[0] | bits[1] << 8
-    return combined if combined < 32768 else combined - 65536
+    return combined if combined < 32768 || isUnsigned else combined - 65536
 
 class Sensor():
     def __init__(self, bus, address, id, name):
@@ -214,11 +217,11 @@ class Pressure(Sensor):
         print(block[5])
         print(block[6])
 
-        Pressure.trim["T1"] = convert([block[0], block[1]])
+        Pressure.trim["T1"] = convert([block[0], block[1]], True)
         Pressure.trim["T2"] = convert([block[2], block[3]])
         Pressure.trim["T3"] = convert([block[4], block[5]])
 
-        Pressure.trim["P1"] = convert([block[6], block[7]])
+        Pressure.trim["P1"] = convert([block[6], block[7]], True)
         Pressure.trim["P2"] = convert([block[8], block[9]])
         Pressure.trim["P3"] = convert([block[10], block[11]])
         Pressure.trim["P4"] = convert([block[12], block[13]])
