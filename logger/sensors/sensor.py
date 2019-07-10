@@ -1,5 +1,6 @@
 from time import time
 import math
+import datetime
 
 def convert(bits, isUnsigned):
     combined = bits[0] | bits[1] << 8
@@ -80,6 +81,9 @@ class Gyroscope(Sensor):
     Y_REGISTER = 0x1A
     Z_REGISTER = 0x1C
 
+    GAIN = 0.070
+    TIME = datetime.datetime.now()
+
     def __init__(self, bus):
         Sensor.__init__(self, bus, 0x6A, 0x68, "Gyroscope")
 
@@ -106,7 +110,25 @@ class Gyroscope(Sensor):
         return convert(self.readBlock(Gyroscope.Z_REGISTER, 2), False)
 
     def __str__(self):
-        return "Gyro\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
+        diff = datetime.datetime.now() - Gyroscope.TIME
+        diff = diff.microseconds / (1000000 * 1.0)
+        Gyroscope.TIME = datetime.datetime.now()
+
+        x = self.readX()
+        y = self.readY()
+        z = self.readZ()
+
+        rateX = x * Gyroscope.GAIN
+        rateY = y * Gyroscope.GAIN
+        rateZ = z * Gyroscope.GAIN
+
+        angleX = rateX * diff
+        angleY = rateY * diff
+        angleZ = rateZ * diff
+
+        output = "Gyro Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (x, y, z)
+        output += "Gyro Angle\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (angleX, angleY, angleZ)
+        return output
 
 class Magnetometer(Sensor):
     OUTPUT_CONFIG_REGISTER = 0x20
