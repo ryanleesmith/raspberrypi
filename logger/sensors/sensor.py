@@ -70,7 +70,21 @@ class Accelerometer(Sensor):
         return convert(self.readBlock(Accelerometer.Z_REGISTER, 2), False)
 
     def __str__(self):
-        return "Accel\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
+        x = self.readX()
+        y = self.readY()
+        z = self.readZ()
+
+        angleX = math.degrees(math.atan2(y, z))
+        angleY = math.degrees(math.atan2(z, x) + math.pi)
+
+        if angleY > 90:
+            angleY -= 270.0
+        else:
+            angleY += 90.0
+
+        ouput = "Accel Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (x, y, z)
+        output += "Accel Angle\tX: %.2f\t Y: %.2f\n" % (angleX, angleY)
+        return output
 
 class Gyroscope(Sensor):
     AXIS_ENABLE_REGISTER = 0x1E
