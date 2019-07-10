@@ -7,7 +7,7 @@ def convert(bits, isUnsigned):
     print(bits[0])
     print(bits[1])
     combined = bits[0] | bits[1] << 8
-    return combined if combined < 32768 || isUnsigned else combined - 65536
+    return combined if combined < 32768 or isUnsigned else combined - 65536
 
 class Sensor():
     def __init__(self, bus, address, id, name):
