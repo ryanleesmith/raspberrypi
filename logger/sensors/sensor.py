@@ -214,39 +214,19 @@ class Pressure(Sensor):
         print(block[5])
         print(block[6])
 
-        Pressure.trim["T1"] = block[1] * 256 + block[0]
-        Pressure.trim["T2"] = block[3] * 256 + block[2]
-        if Pressure.trim["T2"] > 32767:
-            Pressure.trim["T2"] -= 65536
-        Pressure.trim["T3"] = block[5] * 256 + block[4]
-        if Pressure.trim["T3"] > 32767:
-            Pressure.trim["T3"] -= 65536
+        Pressure.trim["T1"] = convert([block[0], block[1])
+        Pressure.trim["T2"] = convert([block[2], block[3])
+        Pressure.trim["T3"] = convert([block[4], block[5])
 
-        Pressure.trim["P1"] = block[7] * 256 + block[6]
-        Pressure.trim["P2"] = block[9] * 256 + block[8]
-        if Pressure.trim["P2"] > 32767:
-            Pressure.trim["P2"] -= 65536
-        Pressure.trim["P3"] = block[11] * 256 + block[10]
-        if Pressure.trim["P3"] > 32767:
-            Pressure.trim["P3"] -= 65536
-        Pressure.trim["P4"] = block[13] * 256 + block[12]
-        if Pressure.trim["P4"] > 32767:
-            Pressure.trim["P4"] -= 65536
-        Pressure.trim["P5"] = block[15] * 256 + block[14]
-        if Pressure.trim["P5"] > 32767:
-            Pressure.trim["P5"] -= 65536
-        Pressure.trim["P6"] = block[17] * 256 + block[16]
-        if Pressure.trim["P6"] > 32767:
-            Pressure.trim["P6"] -= 65536
-        Pressure.trim["P7"] = block[19] * 256 + block[18]
-        if Pressure.trim["P7"] > 32767:
-            Pressure.trim["P7"] -= 65536
-        Pressure.trim["P8"] = block[21] * 256 + block[20]
-        if Pressure.trim["P8"] > 32767:
-            Pressure.trim["P8"] -= 65536
-        Pressure.trim["P9"] = block[23] * 256 + block[22]
-        if Pressure.trim["P9"] > 32767:
-            Pressure.trim["P9"] -= 65536
+        Pressure.trim["P1"] = convert([block[6], block[7])
+        Pressure.trim["P2"] = convert([block[8], block[9])
+        Pressure.trim["P3"] = convert([block[10], block[11])
+        Pressure.trim["P4"] = convert([block[12], block[13])
+        Pressure.trim["P5"] = convert([block[14], block[15])
+        Pressure.trim["P6"] = convert([block[16], block[17])
+        Pressure.trim["P7"] = convert([block[18], block[19])
+        Pressure.trim["P8"] = convert([block[20], block[21])
+        Pressure.trim["P9"] = convert([block[22], block[23])
 
     def readData(self):
         currTime = int(round(time() * 1000))
