@@ -1,4 +1,5 @@
 from time import time
+import math
 
 def convert(bits, isUnsigned):
     combined = bits[0] | bits[1] << 8
@@ -165,8 +166,13 @@ class IMU():
         self.gyr.initialize()
         self.mag.initialize()
 
+    def getHeading(self):
+        return 180 * math.atan2(self.mag.readY(), self.mag.readX()) / math.pi
+
     def __str__(self):
-        return str(self.acc) + str(self.gyr) + str(self.mag)
+        output = str(self.acc) + str(self.gyr) + str(self.mag)
+        output += "Heading: %.2f\n" % self.getHeading()
+        return output
 
 class Pressure(Sensor):
     CTRL_MEAS_REGISTER = 0xF4
