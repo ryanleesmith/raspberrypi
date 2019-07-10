@@ -1,8 +1,5 @@
 from time import time
 
-def convert(bits):
-    return convert(bits, False)
-
 def convert(bits, isUnsigned):
     print(bits[0])
     print(bits[1])
@@ -64,13 +61,13 @@ class Accelerometer(Sensor):
         self.write(Accelerometer.OUTPUT_CONFIG_REGISTER, 0b00100000)
 
     def readX(self):
-        return convert(self.readBlock(Accelerometer.X_REGISTER, 2))
+        return convert(self.readBlock(Accelerometer.X_REGISTER, 2), False)
 
     def readY(self):
-        return convert(self.readBlock(Accelerometer.Y_REGISTER, 2))
+        return convert(self.readBlock(Accelerometer.Y_REGISTER, 2), False)
 
     def readZ(self):
-        return convert(self.readBlock(Accelerometer.Z_REGISTER, 2))
+        return convert(self.readBlock(Accelerometer.Z_REGISTER, 2), False)
 
     def __str__(self):
         return "Accel\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
@@ -101,13 +98,13 @@ class Gyroscope(Sensor):
         self.write(Gyroscope.ORIENTATION_REGISTER, 0b00111000)
 
     def readX(self):
-        return convert(self.readBlock(Gyroscope.X_REGISTER, 2))
+        return convert(self.readBlock(Gyroscope.X_REGISTER, 2), False)
 
     def readY(self):
-        return convert(self.readBlock(Gyroscope.Y_REGISTER, 2))
+        return convert(self.readBlock(Gyroscope.Y_REGISTER, 2), False)
 
     def readZ(self):
-        return convert(self.readBlock(Gyroscope.Z_REGISTER, 2))
+        return convert(self.readBlock(Gyroscope.Z_REGISTER, 2), False)
 
     def __str__(self):
         return "Gyro\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
@@ -143,13 +140,13 @@ class Magnetometer(Sensor):
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
     def readX(self):
-        return convert(self.readBlock(Magnetometer.X_REGISTER, 2))
+        return convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
 
     def readY(self):
-        return convert(self.readBlock(Magnetometer.Y_REGISTER, 2))
+        return convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
 
     def readZ(self):
-        return convert(self.readBlock(Magnetometer.Z_REGISTER, 2))
+        return convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
 
     def __str__(self):
         return "Mag\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
@@ -218,18 +215,18 @@ class Pressure(Sensor):
         print(block[6])
 
         Pressure.trim["T1"] = convert([block[0], block[1]], True)
-        Pressure.trim["T2"] = convert([block[2], block[3]])
-        Pressure.trim["T3"] = convert([block[4], block[5]])
+        Pressure.trim["T2"] = convert([block[2], block[3]], False)
+        Pressure.trim["T3"] = convert([block[4], block[5]], False)
 
         Pressure.trim["P1"] = convert([block[6], block[7]], True)
-        Pressure.trim["P2"] = convert([block[8], block[9]])
-        Pressure.trim["P3"] = convert([block[10], block[11]])
-        Pressure.trim["P4"] = convert([block[12], block[13]])
-        Pressure.trim["P5"] = convert([block[14], block[15]])
-        Pressure.trim["P6"] = convert([block[16], block[17]])
-        Pressure.trim["P7"] = convert([block[18], block[19]])
-        Pressure.trim["P8"] = convert([block[20], block[21]])
-        Pressure.trim["P9"] = convert([block[22], block[23]])
+        Pressure.trim["P2"] = convert([block[8], block[9]], False)
+        Pressure.trim["P3"] = convert([block[10], block[11]], False)
+        Pressure.trim["P4"] = convert([block[12], block[13]], False)
+        Pressure.trim["P5"] = convert([block[14], block[15]], False)
+        Pressure.trim["P6"] = convert([block[16], block[17]], False)
+        Pressure.trim["P7"] = convert([block[18], block[19]], False)
+        Pressure.trim["P8"] = convert([block[20], block[21]], False)
+        Pressure.trim["P9"] = convert([block[22], block[23]], False)
 
     def readData(self):
         currTime = int(round(time() * 1000))
