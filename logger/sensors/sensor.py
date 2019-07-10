@@ -167,7 +167,8 @@ class IMU():
         self.mag.initialize()
 
     def getHeading(self):
-        return 180 * math.atan2(self.mag.readY(), self.mag.readX()) / math.pi
+        heading = 180 * math.atan2(self.mag.readY(), self.mag.readX()) / math.pi
+        return heading if heading >= 0 else heading += 360
 
     def __str__(self):
         output = str(self.acc) + str(self.gyr) + str(self.mag)
