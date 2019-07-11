@@ -82,8 +82,16 @@ class Accelerometer(Sensor):
         else:
             angleY += 90.0
 
+        xNorm = x / math.sqrt(x**2 + y**2 + z**2)
+        yNorm = y / math.sqrt(x**2 + y**2 + z**2)
+
+        pitch = math.asin(xNorm)
+        roll = -math.asin(yNorm / math.cos(pitch))
+
         output = "Accel Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (x, y, z)
         output += "Accel Angle\tX: %.2f\t Y: %.2f\n" % (angleX, angleY)
+        output += "Pitch: %.2f\n" % pitch
+        output += "Roll: %.2f\n" % roll
         return output
 
 class Gyroscope(Sensor):
