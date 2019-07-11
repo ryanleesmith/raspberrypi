@@ -192,7 +192,7 @@ class Magnetometer(Sensor):
         return convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
 
     def __str__(self):
-        return "Mag\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
+        return "Magnet Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
 class IMU():
     def __init__(self, bus):
@@ -215,7 +215,7 @@ class IMU():
         return heading if heading >= 0 else heading + 360
 
     def __str__(self):
-        output = str(self.acc) + str(self.gyr) + str(self.mag)
+        output = str(self.acc) + "\n" + str(self.gyr) + "\n" + str(self.mag)
         output += "Heading: %.2f\n" % self.getHeading()
         return output
 
