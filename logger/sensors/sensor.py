@@ -210,6 +210,12 @@ class Magnetometer(Sensor):
                 Magnetometer.Y_MIN = y
             if z < Magnetometer.Z_MIN:
                 Magnetometer.Z_MIN = z
+            time.sleep(0.02)
+
+        print("Calibrated Magnet\tX: %.2f - %.2f\t Y: %.2f - %.2f\t Z: %.2f - %.2f\n" %
+                                                                    (Magnetometer.X_MIN, Magnetometer.X_MAX,
+                                                                     Magnetometer.Y_MIN, Magnetometer.Y_MAX,
+                                                                     Magnetometer.Z_MIN, Magnetometer.Z_MAX)
 
     def readX(self):
         x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
