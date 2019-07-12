@@ -221,7 +221,10 @@ class IMU():
         return math.asin(self.acc.getNormalized()[0])
 
     def getRoll(self):
-        return -math.asin(self.acc.getNormalized()[1] / math.cos(self.getPitch()))
+        try:
+            return -math.asin(self.acc.getNormalized()[1] / math.cos(self.getPitch()))
+        except ValueError:
+            return 0
 
     def getHeading(self, compensated):
         magX = self.mag.readX()
