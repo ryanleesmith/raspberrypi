@@ -156,12 +156,12 @@ class Gyroscope(Sensor):
         return output
 
 class Magnetometer(Sensor):
-    X_MIN = 332
-    Y_MIN = 822
-    Z_MIN = -870
-    X_MAX = 481
-    Y_MAX = 891
-    Z_MAX = -772
+    X_MIN = 32767
+    Y_MIN = 32767
+    Z_MIN = 32767
+    X_MAX = -32767
+    Y_MAX = -32767
+    Z_MAX = -32767
 
     OUTPUT_CONFIG_REGISTER = 0x20
     SCALE_CONFIG_REGISTER = 0x21
@@ -192,19 +192,38 @@ class Magnetometer(Sensor):
         # NON(7-4) Z-MODE(3-2) BLE(1) NON(0)
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
+        count = 0
+        while count < 100
+            count++
+            x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
+            y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
+            z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
+            if x > X_MAX:
+                X_MAX = x
+            if y > Y_MAX:
+                Y_MAX = y
+            if z > Z_MAX:
+                Z_MAX = z
+            if x < X_MIN:
+                X_MIN = x
+            if y < Y_MIN:
+                Y_MIN = y
+            if z < Z_MIN:
+                Z_MIN = z
+
     def readX(self):
         x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
-        #x -= (Magnetometer.X_MIN + Magnetometer.X_MAX) / 2
+        x -= (Magnetometer.X_MIN + Magnetometer.X_MAX) / 2
         return x
 
     def readY(self):
         y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
-        #y -= (Magnetometer.Y_MIN + Magnetometer.Y_MAX) / 2
+        y -= (Magnetometer.Y_MIN + Magnetometer.Y_MAX) / 2
         return y
 
     def readZ(self):
         z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
-        #z -= (Magnetometer.Z_MIN + Magnetometer.Z_MAX) / 2
+        z -= (Magnetometer.Z_MIN + Magnetometer.Z_MAX) / 2
         return z
 
     def __str__(self):
