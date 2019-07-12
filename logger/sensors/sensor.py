@@ -194,7 +194,7 @@ class Magnetometer(Sensor):
 
         count = 0
         while count < 100:
-            count++
+            count += 1
             x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
             y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
             z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
