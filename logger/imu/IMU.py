@@ -17,7 +17,7 @@ def detect():
         bar.detect()
         alt.detect()
     except sensor.SensorError as e:
-        print "Could not detect %s\n" % e.name
+        print("Could not detect %s\n" % e.name)
         return False
     else:
         return True

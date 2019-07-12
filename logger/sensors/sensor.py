@@ -291,7 +291,7 @@ class IMU():
         try:
             return IMU.DIRECTIONS[int(round(heading / 45)) - 1]
         except IndexError:
-            print int(round(heading / 45)) - 1
+            print(int(round(heading / 45)) - 1)
             return ""
 
     def __str__(self):
