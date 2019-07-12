@@ -240,8 +240,11 @@ class IMU():
 
     def getDirection(self):
         heading = self.getHeading(True)
-        print int(round(heading / 22.5))
-        return IMU.DIRECTIONS[int(round(heading / 22.5))]
+        try:
+            return IMU.DIRECTIONS[int(round(heading / 22.5))]
+        except IndexError:
+            print int(round(heading / 22.5))
+            return ""
 
     def __str__(self):
         output = str(self.acc) + "\n" + str(self.gyr) + "\n" + str(self.mag) + "\n"
