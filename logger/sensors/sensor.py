@@ -156,6 +156,13 @@ class Gyroscope(Sensor):
         return output
 
 class Magnetometer(Sensor):
+    X_MIN = 332
+    Y_MIN = 822
+    Z_MIN = -870
+    X_MAX = 481
+    Y_MAX = 891
+    Z_MAX = -772
+
     OUTPUT_CONFIG_REGISTER = 0x20
     SCALE_CONFIG_REGISTER = 0x21
     MODE_CONFIG_REGISTER = 0x22
@@ -186,13 +193,19 @@ class Magnetometer(Sensor):
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
     def readX(self):
-        return convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
+        x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
+        x -= (Magnetometer.X_MIN + Magnetometer.X_MAX) / 2
+        return x
 
     def readY(self):
-        return convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
+        y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
+        y -= (Magnetometer.Y_MIN + Magnetometer.Y_MAX) / 2
+        return y
 
     def readZ(self):
-        return convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
+        z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
+        z -= (Magnetometer.Z_MIN + Magnetometer.Z_MAX) / 2
+        return z
 
     def __str__(self):
         return "Magnet Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
@@ -218,7 +231,10 @@ class IMU():
         self.mag.initialize()
 
     def getPitch(self):
-        return math.asin(self.acc.getNormalized()[0])
+        try:
+            return math.asin(self.acc.getNormalized()[0])
+        except ValueError:
+            return 0
 
     def getRoll(self):
         try:
