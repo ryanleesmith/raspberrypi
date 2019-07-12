@@ -69,6 +69,17 @@ class Accelerometer(Sensor):
     def readZ(self):
         return convert(self.readBlock(Accelerometer.Z_REGISTER, 2), False)
 
+    def getNormalized(self):
+        x = self.readX()
+        y = self.readY()
+        z = self.readZ()
+
+        divisor = math.sqrt(x**2 + y**2 + z**2)
+        xNorm = self.readX() / divisor
+        yNorm = self.readY() / divisor
+
+        return [xNorm, yNorm]
+
     def __str__(self):
         x = self.readX()
         y = self.readY()
@@ -82,16 +93,8 @@ class Accelerometer(Sensor):
         else:
             angleY += 90.0
 
-        xNorm = x / math.sqrt(x**2 + y**2 + z**2)
-        yNorm = y / math.sqrt(x**2 + y**2 + z**2)
-
-        pitch = math.asin(xNorm)
-        roll = -math.asin(yNorm / math.cos(pitch))
-
         output = "Accel Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (x, y, z)
         output += "Accel Angle\tX: %.2f\t Y: %.2f\n" % (angleX, angleY)
-        output += "Pitch: %.2f\n" % pitch
-        output += "Roll: %.2f\n" % roll
         return output
 
 class Gyroscope(Sensor):
@@ -210,13 +213,33 @@ class IMU():
         self.gyr.initialize()
         self.mag.initialize()
 
-    def getHeading(self):
-        heading = 180 * math.atan2(self.mag.readY(), self.mag.readX()) / math.pi
+    def getPitch(self):
+        return math.asin(self.acc.getNormalized()[0])
+
+    def getRoll(self):
+        return -math.asin(self.acc.getNormalized()[1] / math.cos(self.getPitch()))
+
+    def getHeading(self, compensated):
+        magX = self.mag.readX()
+        magY = self.mag.readY()
+
+        if compensated:
+            magZ = self.mag.readZ()
+            pitch = self.getPitch()
+            roll = self.getRoll()
+
+            magX = magX * math.cos(pitch) + magZ * math.sin(pitch)
+            magY = magX * math.sin(roll) * math.sin(pitch) + magY * math.cos(roll) + magZ * math.sin(roll) * math.cos(pitch)
+
+        heading = 180 * math.atan2(magY, magX) / math.pi
         return heading if heading >= 0 else heading + 360
 
     def __str__(self):
-        output = str(self.acc) + "\n" + str(self.gyr) + "\n" + str(self.mag)
-        output += "Heading: %.2f\n" % self.getHeading()
+        output = str(self.acc) + "\n" + str(self.gyr) + "\n" + str(self.mag) + "\n"
+        output += "Pitch: %.2f\n" % self.getPitch()
+        output += "Roll: %.2f\n" % self.getRoll()
+        output += "Heading: %.2f\n" % self.getHeading(False)
+        output += "Compensated Heading: %.2f\n" % self.getHeading(True)
         return output
 
 class Pressure(Sensor):
