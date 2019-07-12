@@ -198,18 +198,18 @@ class Magnetometer(Sensor):
             x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
             y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
             z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
-            if x > X_MAX:
-                X_MAX = x
-            if y > Y_MAX:
-                Y_MAX = y
-            if z > Z_MAX:
-                Z_MAX = z
-            if x < X_MIN:
-                X_MIN = x
-            if y < Y_MIN:
-                Y_MIN = y
-            if z < Z_MIN:
-                Z_MIN = z
+            if x > Magnetometer.X_MAX:
+                Magnetometer.X_MAX = x
+            if y > Magnetometer.Y_MAX:
+                Magnetometer.Y_MAX = y
+            if z > Magnetometer.Z_MAX:
+                Magnetometer.Z_MAX = z
+            if x < Magnetometer.X_MIN:
+                Magnetometer.X_MIN = x
+            if y < Magnetometer.Y_MIN:
+                Magnetometer.Y_MIN = y
+            if z < Magnetometer.Z_MIN:
+                Magnetometer.Z_MIN = z
 
     def readX(self):
         x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
