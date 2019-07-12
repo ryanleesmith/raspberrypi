@@ -211,10 +211,10 @@ class Magnetometer(Sensor):
         return "Magnet Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
 class IMU():
-    DIRECTIONS = ["N", "NNE", "NE", "ENE",
-                  "E", "ESE", "SE", "SSE",
-                  "S", "SSW", "SW", "WSW",
-                  "W", "WNW", "NW", "NNW"]
+    DIRECTIONS = ["N", "NE",
+                  "E", "SE",
+                  "S", "SW",
+                  "W", "NW"]
     def __init__(self, bus):
         self.acc = Accelerometer(bus)
         self.gyr = Gyroscope(bus)
@@ -260,9 +260,9 @@ class IMU():
     def getDirection(self):
         heading = self.getHeading(True)
         try:
-            return IMU.DIRECTIONS[int(round(heading / 22.5)) - 1]
+            return IMU.DIRECTIONS[int(round(heading / 45)) - 1]
         except IndexError:
-            print int(round(heading / 22.5)) - 1
+            print int(round(heading / 45)) - 1
             return ""
 
     def __str__(self):
