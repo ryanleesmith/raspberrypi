@@ -192,6 +192,8 @@ class Magnetometer(Sensor):
         # NON(7-4) Z-MODE(3-2) BLE(1) NON(0)
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
+        math.isclose(1, 2)
+
         count = 0
         while count < 100:
             count += 1
