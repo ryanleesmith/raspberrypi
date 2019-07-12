@@ -198,6 +198,10 @@ class Magnetometer(Sensor):
         return "Magnet Raw\tX: %.2f\t Y: %.2f\t Z: %.2f\n" % (self.readX(), self.readY(), self.readZ())
 
 class IMU():
+    DIRECTIONS = ["N", "NNE", "NE", "ENE",
+                  "E", "ESE", "SE", "SSE",
+                  "S", "SSW", "SW", "WSW",
+                  "W", "WNW", "NW", "NNW"]
     def __init__(self, bus):
         self.acc = Accelerometer(bus)
         self.gyr = Gyroscope(bus)
@@ -234,12 +238,17 @@ class IMU():
         heading = 180 * math.atan2(magY, magX) / math.pi
         return heading if heading >= 0 else heading + 360
 
+    def getDirection(self):
+        heading = self.getHeading(True)
+        return IMU.DIRECTIONS[heading / 22.5]
+
     def __str__(self):
         output = str(self.acc) + "\n" + str(self.gyr) + "\n" + str(self.mag) + "\n"
         output += "Pitch: %.2f\n" % self.getPitch()
         output += "Roll: %.2f\n" % self.getRoll()
         output += "Heading: %.2f\n" % self.getHeading(False)
         output += "Compensated Heading: %.2f\n" % self.getHeading(True)
+        output += "Direction: %s\n" % self.getDirection()
         return output
 
 class Pressure(Sensor):
