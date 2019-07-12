@@ -194,17 +194,17 @@ class Magnetometer(Sensor):
 
     def readX(self):
         x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
-        x -= (Magnetometer.X_MIN + Magnetometer.X_MAX) / 2
+        #x -= (Magnetometer.X_MIN + Magnetometer.X_MAX) / 2
         return x
 
     def readY(self):
         y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
-        y -= (Magnetometer.Y_MIN + Magnetometer.Y_MAX) / 2
+        #y -= (Magnetometer.Y_MIN + Magnetometer.Y_MAX) / 2
         return y
 
     def readZ(self):
         z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
-        z -= (Magnetometer.Z_MIN + Magnetometer.Z_MAX) / 2
+        #z -= (Magnetometer.Z_MIN + Magnetometer.Z_MAX) / 2
         return z
 
     def __str__(self):
@@ -215,6 +215,7 @@ class IMU():
                   "E", "SE",
                   "S", "SW",
                   "W", "NW"]
+
     def __init__(self, bus):
         self.acc = Accelerometer(bus)
         self.gyr = Gyroscope(bus)
