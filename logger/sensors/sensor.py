@@ -193,7 +193,7 @@ class Magnetometer(Sensor):
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
         startTime = int(round(time() * 1000))
-        while startTime + 5000 < int(round(time() * 1000)):
+        while startTime + 5000 > int(round(time() * 1000)):
             x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
             y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
             z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
