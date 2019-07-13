@@ -192,14 +192,12 @@ class Magnetometer(Sensor):
         # NON(7-4) Z-MODE(3-2) BLE(1) NON(0)
         self.write(Magnetometer.Z_MODE_CONFIG_REGISTER, 0b00000000)
 
-        math.isclose(1, 2)
-
-        count = 0
-        while count < 100:
-            count += 1
+        startTime = int(round(time() * 1000))
+        while startTime + 5000 < int(round(time() * 1000)):
             x = convert(self.readBlock(Magnetometer.X_REGISTER, 2), False)
             y = convert(self.readBlock(Magnetometer.Y_REGISTER, 2), False)
             z = convert(self.readBlock(Magnetometer.Z_REGISTER, 2), False)
+
             if x > Magnetometer.X_MAX:
                 Magnetometer.X_MAX = x
             if y > Magnetometer.Y_MAX:
@@ -212,7 +210,6 @@ class Magnetometer(Sensor):
                 Magnetometer.Y_MIN = y
             if z < Magnetometer.Z_MIN:
                 Magnetometer.Z_MIN = z
-            sleep(0.02)
 
         print("Calibrated Magnet\tX: %.2f - %.2f\t Y: %.2f - %.2f\t Z: %.2f - %.2f\n" %
                                                                     (Magnetometer.X_MIN, Magnetometer.X_MAX,
