@@ -18,7 +18,7 @@ class Sensor():
         try:
             print("Detecting %s..." % (self.name))
             id = self.read(self.idRegister)
-        except IOError as ioe:
+        except IOError:
             raise SensorError(self.name)
         else:
             if (id != self.id):
