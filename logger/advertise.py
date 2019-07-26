@@ -10,10 +10,7 @@ import dbus.service
 import time
 import threading
 
-try:
-    from gi.repository import GObject  # python3
-except ImportError:
-    import gobject as GObject  # python2
+from gi.repository import GObject
 
 mainloop = None
 
