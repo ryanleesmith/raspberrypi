@@ -5,6 +5,8 @@ import dbus.exceptions
 import dbus.mainloop.glib
 import dbus.service
 
+import array
+
 from gi.repository import GObject
 
 BT_SERVICE_NAME             = 'org.bluez'
@@ -24,6 +26,9 @@ class InvalidArgsException(dbus.exceptions.DBusException):
 
 class NotSupportedException(dbus.exceptions.DBusException):
     _dbus_error_name = 'org.bluez.Error.NotSupported'
+
+class NotPermittedException(dbus.exceptions.DBusException):
+    _dbus_error_name = 'org.bluez.Error.NotPermitted'
 
 class Application(dbus.service.Object):
     def __init__(self, bus):
