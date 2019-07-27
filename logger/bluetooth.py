@@ -228,8 +228,7 @@ class Descriptor(dbus.service.Object):
 class CharacteristicUserDescriptionDescriptor(Descriptor):
     def __init__(self, bus, index, characteristic):
         #self.writable = 'writable-auxiliaries' in characteristic.flags
-        value = array.array('B', b'This is a characteristic for testing')
-        self.value = value.tolist()
+        self.value = []
         Descriptor.__init__(
                 self, bus, index,
                 '2901',
@@ -356,7 +355,7 @@ class SensorCharacteristic(Characteristic):
                 '2ede8dfe-bac3-452b-8e18-f364a2bd267e',
                 ['read', 'notify'],
                 service)
-        self.add_descriptor(CharacteristicUserDescriptionDescriptor(bus, 0, self))
+        self.add_descriptor(SensorDescriptor(bus, 0, self))
         self.notifying = False
 
     def notify(self):
@@ -383,6 +382,12 @@ class SensorCharacteristic(Characteristic):
             return
 
         self.notifying = False
+
+class SensorDescriptor(CharacteristicUserDescriptionDescriptor):
+    def __init__(self, bus, index, characteristic):
+        CharacteristicUserDescriptionDescriptor.__init__(self, bus, index, characteristic)
+        value = array.array('B', b'SensorDescriptor')
+        self.value = value.tolist()
 
 class SensorAdvertisement(Advertisement):
     def __init__(self, bus, index):
