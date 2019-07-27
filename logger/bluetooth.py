@@ -105,7 +105,6 @@ class Service(dbus.service.Object):
 
         return self.get_properties()[GATT_SERVICE_IFACE]
 
-
 class Characteristic(dbus.service.Object):
     def __init__(self, bus, index, uuid, flags, service):
         self.path = service.path + '/char' + str(index)
@@ -221,6 +220,25 @@ class Descriptor(dbus.service.Object):
         print('Default WriteValue called, returning error')
         raise NotSupportedException()
 
+class CharacteristicUserDescriptionDescriptor(Descriptor):
+    def __init__(self, bus, index, characteristic):
+        #self.writable = 'writable-auxiliaries' in characteristic.flags
+        value = array.array('B', b'This is a characteristic for testing')
+        self.value = value.tolist()
+        Descriptor.__init__(
+                self, bus, index,
+                '2901',
+                ['read', 'write'],
+                characteristic)
+
+    def ReadValue(self, options):
+        return self.value
+
+    def WriteValue(self, value, options):
+        #if not self.writable:
+        raise NotPermittedException()
+        #self.value = value
+
 class Advertisement(dbus.service.Object):
     PATH_BASE = '/org/bluez/example/advertisement'
 
@@ -333,6 +351,7 @@ class SensorCharacteristic(Characteristic):
                 '2ede8dfe-bac3-452b-8e18-f364a2bd267e',
                 ['read', 'notify'],
                 service)
+        self.add_descriptor(CharacteristicUserDescriptionDescriptor(bus, 0, self))
         self.notifying = False
 
     def notify(self):
@@ -340,10 +359,10 @@ class SensorCharacteristic(Characteristic):
             return
         self.PropertiesChanged(
                 GATT_CHRC_IFACE,
-                { 'Value': [dbus.Byte('Sensor Data')] }, [])
+                { 'Value': [dbus.Byte(5)] }, [])
 
     def ReadValue(self, options):
-        return [dbus.Byte('Sensor Data')]
+        return [dbus.Byte(10)]
 
     def StartNotify(self):
         if self.notifying:
