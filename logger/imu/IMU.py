@@ -3,6 +3,7 @@ import smbus
 bus = smbus.SMBus(1)
 
 from sensors import sensor
+import bluetooth
 
 imu = sensor.IMU(bus)
 thm = sensor.Thermometer(bus)
@@ -28,6 +29,9 @@ def initialize():
     thm.initialize()
     bar.initialize()
     alt.initialize()
+
+    bluetooth.init(imu)
+
     return
 
 def printData():

@@ -339,20 +339,19 @@ class Advertisement(dbus.service.Object):
         mainloop.quit()
 
 class SensorApplication(Application):
-    def __init__(self, bus):
+    def __init__(self, bus, imu):
         Application.__init__(self, bus)
-        self.add_service(SensorService(bus, 0))
+        self.add_service(SensorService(bus, 0, imu))
 
 class SensorService(Service):
-    def __init__(self, bus, index):
+    def __init__(self, bus, index, imu):
         Service.__init__(self, bus, index, '21f694ed-e0bb-4b50-bc20-753431c8e120', True)
-        self.add_characteristic(SensorCharacteristic(bus, 0, self))
+        self.add_characteristic(IMUCharacteristic(bus, 0, self, imu))
 
 class SensorCharacteristic(Characteristic):
-    def __init__(self, bus, index, service):
+    def __init__(self, bus, index, uuid, service):
         Characteristic.__init__(
-                self, bus, index,
-                '2ede8dfe-bac3-452b-8e18-f364a2bd267e',
+                self, bus, index, uuid,
                 ['read', 'notify'],
                 service)
         self.add_descriptor(SensorDescriptor(bus, 0, self))
@@ -363,10 +362,11 @@ class SensorCharacteristic(Characteristic):
             return
         self.PropertiesChanged(
                 GATT_CHRC_IFACE,
-                { 'Value': [dbus.Byte(5)] }, [])
+                { 'Value': self.ReadValue(None) }, [])
 
     def ReadValue(self, options):
-        return [dbus.Byte(10)]
+        print('Default ReadValue called, returning error')
+        raise NotSupportedException()
 
     def StartNotify(self):
         if self.notifying:
@@ -382,6 +382,18 @@ class SensorCharacteristic(Characteristic):
             return
 
         self.notifying = False
+
+class IMUCharacteristic(SensorCharacteristic):
+    def __init__(self, bus, index, service, imu):
+        SensorCharacteristic.__init__(
+                self, bus, index,
+                '73c21a22-d12a-491e-b665-816df9f0d3b0',
+                service)
+
+        self.imu = imu
+
+    def ReadValue(self, options):
+        return [dbus.Byte(self.imu.getPitch()), dbus.Byte(self.imu.getRoll())]
 
 class SensorDescriptor(CharacteristicUserDescriptionDescriptor):
     def __init__(self, bus, index, characteristic):
@@ -411,7 +423,7 @@ def findAdapter(bus):
 
     return adapter
 
-def init():
+def init(imu):
     global mainloop
 
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
@@ -426,7 +438,7 @@ def init():
     serviceManager = dbus.Interface(bus.get_object(BT_SERVICE_NAME, adapter), GATT_MANAGER_IFACE)
     advertisingManager = dbus.Interface(bus.get_object(BT_SERVICE_NAME, adapter), ADVERTISING_MANAGER_IFACE)
 
-    sensorApplication = SensorApplication(bus)
+    sensorApplication = SensorApplication(bus, imu)
     sensorAdvertisement = SensorAdvertisement(bus, 0)
 
     mainloop = GObject.MainLoop()
@@ -444,6 +456,3 @@ def init():
         #sensorAdvertisement.Release()
         advertisingManager.UnregisterAdvertisement(sensorAdvertisement)
         dbus.service.Object.remove_from_connection(sensorAdvertisement)
-
-if __name__ == '__main__':
-    init()
